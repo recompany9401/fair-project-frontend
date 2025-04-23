@@ -28,7 +28,7 @@ function BuyerPurchaseList() {
   const fetchPurchaseList = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/purchases?buyerId=${id}`
+        `https://fair-project-backend-production.up.railway.app/api/purchases?buyerId=${id}`
       );
       const data = await res.json();
       if (res.ok) {

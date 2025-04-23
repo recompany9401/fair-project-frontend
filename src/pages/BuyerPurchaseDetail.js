@@ -28,7 +28,7 @@ function BuyerPurchaseDetail() {
   const fetchPurchaseDetail = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/purchases/${purchaseId}`
+        `https://fair-project-backend-production.up.railway.app/api/purchases/${purchaseId}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -91,7 +91,7 @@ function BuyerPurchaseDetail() {
       };
 
       const res = await fetch(
-        `http://localhost:3000/api/purchases/${purchaseId}`,
+        `https://fair-project-backend-production.up.railway.app/api/purchases/${purchaseId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

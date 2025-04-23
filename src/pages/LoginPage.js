@@ -13,39 +13,33 @@ function LoginPage() {
     setMessage("로그인 중...");
 
     try {
-      // userId, password 로 /api/login 에 POST
-      const response = await fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, password }),
-      });
+      const response = await fetch(
+        "https://fair-project-backend-production.up.railway.app/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, password }),
+        }
+      );
       const data = await response.json();
 
       if (response.ok) {
-        // 로그인 성공 응답
         if (data.role === "BUYER") {
-          // 구매자
           localStorage.setItem("buyerId", data.userId);
           navigate("/buyer-home");
         } else if (data.role === "BUSINESS") {
-          // 사업자
           localStorage.setItem("businessId", data.userId);
           if (data.businessName) {
             localStorage.setItem("businessName", data.businessName);
           }
           navigate("/business-home");
         } else if (data.role === "ADMIN") {
-          // ★ 관리자
-          // 필요하다면 adminId, token 등 저장
           localStorage.setItem("adminId", data.userId);
-          // 관리자 페이지로 이동
           navigate("/admin");
         } else {
-          // role이 정의되지 않은 경우
           setMessage("로그인 실패: 알 수 없는 사용자 타입");
         }
       } else {
-        // 로그인 실패 (아이디 없음, 비번 틀림, 미승인 등)
         setMessage(`로그인 실패: ${data.message}`);
       }
     } catch (err) {

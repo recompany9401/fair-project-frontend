@@ -24,7 +24,7 @@ function BusinessDetailPage() {
   const fetchBusinessDetail = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/admin/businesses/${id}`
+        `https://fair-project-backend-production.up.railway.app/api/admin/businesses/${id}`
       );
       if (!res.ok) {
         const errData = await res.json();

@@ -55,7 +55,9 @@ function BuyerHomePage() {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/products/all");
+      const response = await fetch(
+        "https://fair-project-backend-production.up.railway.app/api/products/all"
+      );
       const data = await response.json();
       if (response.ok) {
         setAllProducts(data);
@@ -157,11 +159,14 @@ function BuyerHomePage() {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/purchases", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
+      const response = await fetch(
+        "https://fair-project-backend-production.up.railway.app/api/purchases",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyData),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         alert("구매 정보 등록 성공!");

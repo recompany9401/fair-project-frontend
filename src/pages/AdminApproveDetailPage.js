@@ -30,9 +30,9 @@ function AdminApproveDetailPage() {
     try {
       let url = "";
       if (type === "business") {
-        url = `http://localhost:3000/api/admin/businesses/${id}`;
+        url = `https://fair-project-backend-production.up.railway.app/api/admin/businesses/${id}`;
       } else if (type === "buyer") {
-        url = `http://localhost:3000/api/admin/buyers/${id}`;
+        url = `https://fair-project-backend-production.up.railway.app/api/admin/buyers/${id}`;
       } else {
         console.error("잘못된 type:", type);
         return;
@@ -56,10 +56,10 @@ function AdminApproveDetailPage() {
     try {
       let url = "";
       if (type === "business") {
-        url = `http://localhost:3000/api/admin/business/${id}/approve`;
+        url = `https://fair-project-backend-production.up.railway.app/api/admin/business/${id}/approve`;
       } else {
         // type === "buyer"
-        url = `http://localhost:3000/api/admin/buyer/${id}/approve`;
+        url = `https://fair-project-backend-production.up.railway.app/api/admin/buyer/${id}/approve`;
       }
 
       const res = await fetch(url, {

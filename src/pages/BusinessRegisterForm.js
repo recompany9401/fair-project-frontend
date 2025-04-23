@@ -34,7 +34,7 @@ function BusinessRegisterForm() {
     try {
       // 사업자 회원가입 API로 전송
       const response = await fetch(
-        "http://localhost:3000/api/businesses/register",
+        "https://fair-project-backend-production.up.railway.app/api/businesses/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -24,7 +24,9 @@ function BuyerDetailPage() {
   // (A) GET /api/admin/buyers/:id
   const fetchBuyerDetail = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/admin/buyers/${id}`);
+      const res = await fetch(
+        `https://fair-project-backend-production.up.railway.app/api/admin/buyers/${id}`
+      );
       if (!res.ok) {
         const errData = await res.json();
         console.error("입주자 상세 조회 실패:", errData.message);

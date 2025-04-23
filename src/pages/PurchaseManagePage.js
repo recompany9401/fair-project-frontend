@@ -23,7 +23,8 @@ function PurchaseManagePage() {
   // 데이터 불러오기
   const fetchPurchases = async () => {
     try {
-      let url = "http://localhost:3000/api/admin/purchases";
+      let url =
+        "https://fair-project-backend-production.up.railway.app/api/admin/purchases";
       if (searchKeyword) {
         // 검색 API 예시: ?field=...&keyword=...
         url += `?field=${encodeURIComponent(

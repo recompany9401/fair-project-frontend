@@ -17,13 +17,13 @@ function AdminApprovePage() {
     try {
       // 1) 사업자
       const bizRes = await fetch(
-        "http://localhost:3000/api/admin/businesses?approved=false"
+        "https://fair-project-backend-production.up.railway.app/api/admin/businesses?approved=false"
       );
       const bizData = await bizRes.json();
 
       // 2) 입주자
       const buyerRes = await fetch(
-        "http://localhost:3000/api/admin/buyers?approved=false"
+        "https://fair-project-backend-production.up.railway.app/api/admin/buyers?approved=false"
       );
       const buyerData = await buyerRes.json();
 

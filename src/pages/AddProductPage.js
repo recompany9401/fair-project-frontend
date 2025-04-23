@@ -69,11 +69,14 @@ function AddProductPage() {
         price: Number(price),
       };
 
-      const response = await fetch("http://localhost:3000/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
+      const response = await fetch(
+        "https://fair-project-backend-production.up.railway.app/api/products",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyData),
+        }
+      );
       const data = await response.json();
 
       if (response.ok) {

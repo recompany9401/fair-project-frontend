@@ -47,7 +47,7 @@ function BusinessHomePage() {
         : `?businessId=${bizId}`;
 
       const response = await fetch(
-        `http://localhost:3000/api/products${query}`
+        `https://fair-project-backend-production.up.railway.app/api/products${query}`
       );
       const data = await response.json();
 

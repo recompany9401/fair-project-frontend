@@ -43,7 +43,7 @@ function BuyerRegisterForm() {
     try {
       // 구매자 회원가입 API
       const response = await fetch(
-        "http://localhost:3000/api/buyers/register",
+        "https://fair-project-backend-production.up.railway.app/api/buyers/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

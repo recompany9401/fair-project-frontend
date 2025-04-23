@@ -14,7 +14,7 @@ function PurchaseDetailPage() {
   const fetchPurchaseDetail = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/admin/purchases/${id}`
+        `https://fair-project-backend-production.up.railway.app/api/admin/purchases/${id}`
       );
       const data = await res.json();
       if (res.ok) {

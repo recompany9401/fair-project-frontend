@@ -15,7 +15,7 @@ function BusinessManagePage() {
   const fetchBusinesses = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/admin/businesses?approved=true"
+        "https://fair-project-backend-production.up.railway.app/api/admin/businesses?approved=true"
       );
       const data = await res.json();
       if (res.ok) {

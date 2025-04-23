@@ -42,7 +42,7 @@ function OptionDetailPage() {
       )}&option=${encodeURIComponent(option)}`;
 
       const res = await fetch(
-        `http://localhost:3000/api/purchases/by-option?${query}`
+        `https://fair-project-backend-production.up.railway.app/api/purchases/by-option?${query}`
       );
       const data = await res.json();
 
@@ -60,7 +60,7 @@ function OptionDetailPage() {
   const handleStatusUpdate = async (purchaseId, newStatus) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/purchases/${purchaseId}/status`,
+        `https://fair-project-backend-production.up.railway.app/api/purchases/${purchaseId}/status`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
