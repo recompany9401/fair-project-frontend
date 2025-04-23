@@ -1,16 +1,12 @@
-// src/pages/AdminApproveDetailPage.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 function AdminApproveDetailPage() {
   const navigate = useNavigate();
   const { type, id } = useParams();
-  // type: "business" or "buyer"
-  // id: 문서 _id
 
   const [account, setAccount] = useState(null);
 
-  // 숨길 필드를 배열에 정의
   const hiddenFields = [
     "_id",
     "role",
@@ -25,7 +21,6 @@ function AdminApproveDetailPage() {
     fetchAccountDetail();
   }, []);
 
-  // (A) 상세 정보 조회
   async function fetchAccountDetail() {
     try {
       let url = "";
@@ -51,14 +46,12 @@ function AdminApproveDetailPage() {
     }
   }
 
-  // (B) 가입 승인 처리
   async function handleApprove() {
     try {
       let url = "";
       if (type === "business") {
         url = `https://fair-project-backend-production.up.railway.app/api/admin/business/${id}/approve`;
       } else {
-        // type === "buyer"
         url = `https://fair-project-backend-production.up.railway.app/api/admin/buyer/${id}/approve`;
       }
 
@@ -72,10 +65,8 @@ function AdminApproveDetailPage() {
         alert(`승인 실패: ${data.message}`);
         return;
       }
-      // 성공
       alert(data.message || "가입 승인 완료!");
 
-      // (B-1) account도 갱신(approved:true)
       setAccount((prev) => ({ ...prev, approved: true }));
     } catch (err) {
       console.error("가입 승인 오류:", err);
@@ -87,7 +78,6 @@ function AdminApproveDetailPage() {
     return <div>로딩중...</div>;
   }
 
-  // (C) 정보 표시 + (가입 승인) 버튼
   return (
     <div style={styles.container}>
       <h2>{type === "business" ? "사업자 상세" : "입주자 상세"}</h2>
@@ -113,7 +103,6 @@ function AdminApproveDetailPage() {
         })}
       </ul>
 
-      {/* (C-1) approved 상태가 false일 때만 “가입 승인” 버튼 노출 */}
       {!account.approved && (
         <button style={styles.approveBtn} onClick={handleApprove}>
           가입 승인

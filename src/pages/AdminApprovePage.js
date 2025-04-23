@@ -1,4 +1,3 @@
-// src/pages/AdminApprovePage.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,16 +11,13 @@ function AdminApprovePage() {
     fetchUnapproved();
   }, []);
 
-  // (A) 미승인 사업자/입주자 목록 불러오기
   const fetchUnapproved = async () => {
     try {
-      // 1) 사업자
       const bizRes = await fetch(
         "https://fair-project-backend-production.up.railway.app/api/admin/businesses?approved=false"
       );
       const bizData = await bizRes.json();
 
-      // 2) 입주자
       const buyerRes = await fetch(
         "https://fair-project-backend-production.up.railway.app/api/admin/buyers?approved=false"
       );
@@ -42,13 +38,10 @@ function AdminApprovePage() {
     }
   };
 
-  // (B) 리스트 클릭 -> 상세 페이지 이동
   const handleBusinessClick = (businessId) => {
-    // /admin/approve-detail/business/abcd1234
     navigate(`/admin/approve-detail/business/${businessId}`);
   };
   const handleBuyerClick = (buyerId) => {
-    // /admin/approve-detail/buyer/abcd1234
     navigate(`/admin/approve-detail/buyer/${buyerId}`);
   };
 

@@ -27,7 +27,6 @@ function App() {
         <Route path="/register/buyer" element={<BuyerRegisterForm />} />
         <Route path="/register/business" element={<BusinessRegisterForm />} />
 
-        {/* 로그인 성공 후: 역할 별 페이지 */}
         <Route path="/business-home" element={<BusinessHomePage />} />
         <Route path="/business/add-product" element={<AddProductPage />} />
         <Route path="/buyer-home" element={<BuyerHomePage />} />

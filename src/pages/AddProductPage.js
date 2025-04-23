@@ -1,46 +1,38 @@
-// src/pages/AddProductPage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AddProductPage() {
   const navigate = useNavigate();
 
-  // (1) 사업자 로그인 시 저장된 값 가져오기
   const storedBusinessId = localStorage.getItem("businessId");
-  const storedBusinessName = localStorage.getItem("businessName"); // 로그인 후 set
+  const storedBusinessName = localStorage.getItem("businessName");
 
-  // (2) 폼 상태
   const [formData, setFormData] = useState({
     itemCategory: "",
     productName: "",
     option: "",
     price: "",
-    // businessName, businessId를 추후 세팅
   });
 
   const [message, setMessage] = useState("");
 
-  // (3) 마운트 시, businessName & businessId를 폼에 반영
   useEffect(() => {
     if (!storedBusinessId || !storedBusinessName) {
       alert("로그인된 사업자 정보가 없습니다. 로그인 페이지로 이동합니다.");
       navigate("/");
       return;
     }
-    // 폼에 businessName, businessId 반영
     setFormData((prev) => ({
       ...prev,
       businessName: storedBusinessName,
     }));
   }, [storedBusinessId, storedBusinessName, navigate]);
 
-  // (4) 인풋 변경 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // (5) 상품 등록
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("등록 중...");
@@ -59,7 +51,6 @@ function AddProductPage() {
         return;
       }
 
-      // POST body
       const bodyData = {
         businessId: storedBusinessId,
         businessName,
@@ -95,7 +86,6 @@ function AddProductPage() {
     <div style={styles.container}>
       <h2>품목(판매품) 추가</h2>
       <form onSubmit={handleSubmit} style={styles.form}>
-        {/* 자동 불러온 업체명(readOnly) */}
         <label>업체명(businessName)</label>
         <input
           type="text"
@@ -150,7 +140,6 @@ function AddProductPage() {
   );
 }
 
-// 간단 스타일
 const styles = {
   container: {
     width: "400px",
