@@ -1,0 +1,154 @@
+body {
+  background-color: #ece4d0;
+}
+
+.business-homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 92vw;
+  height: 96vh;
+  margin: 0 auto;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  margin-top: 4vw;
+  border-radius: 20px;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+}
+
+.business-homepage::-webkit-scrollbar {
+  display: none;
+}
+
+.business-header img {
+  width: 200px;
+  margin: 7vw 0;
+}
+
+.business-header h2 {
+  text-align: center;
+}
+
+.business-header h2 span {
+  font-size: 24px;
+  background: linear-gradient(to top, #ece4d0 40%, transparent 40%);
+  padding: 0 10px;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  max-width: 78vw;
+  margin: 2rem auto 1.4rem;
+}
+
+.search-form input[type="text"] {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.search-form input[type="text"]::placeholder {
+  color: #bbb;
+}
+
+.search-form button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #8f1f22;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.search-form button:focus {
+  outline: none;
+}
+
+/* 드롭다운 */
+.category-list {
+  font-size: 14px;
+  width: 78vw;
+  border-top: 2px solid #8f1f22;
+  margin-bottom: 20px;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  position: relative;
+  padding-left: 25px;
+}
+
+.category-item::before {
+  content: "•";
+  color: #8f1f22;
+  position: absolute;
+  left: 0;
+  margin-left: 5px;
+  font-size: 17px;
+}
+
+.category-item .arrow {
+  margin-left: 0.5rem;
+  color: #dedede;
+  font-size: 10px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.5rem;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  padding-left: 20px;
+}
+
+.product-item span:first-child {
+  margin-right: 0.5rem;
+}
+
+.product-item .arrow {
+  margin-left: auto;
+  color: #dedede;
+  font-size: 10px;
+}
+
+.option-item {
+  padding: 0.6rem 0.5rem;
+  background-color: #8f1f2333;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  padding-left: 40px;
+}
+
+.option-item:hover {
+  background-color: #f5dada;
+}
+
+.category-list > p {
+  padding: 0.8rem;
+  color: #666;
+}
+
+.add-button {
+  margin-bottom: 40px;
+}

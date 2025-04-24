@@ -1,47 +1,88 @@
-// src/components/BuyerRegisterForm.js
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/RegisterForm.css";
 
 function BuyerRegisterForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     userId: "",
     password: "",
-    name: "", // 계약자명
+    confirmPassword: "",
+    name: "",
     phoneNumber: "",
     dong: "",
     ho: "",
     birthDate: "",
-    gender: "M", // 기본값 (선택)
+    gender: "M",
     householdCount: "",
     personalInfoAgreement: false,
   });
 
   const [message, setMessage] = useState("");
 
-  // 입력값 변경 처리
+  const [isChecking, setIsChecking] = useState(false);
+  const [isDuplicate, setIsDuplicate] = useState(false);
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
 
+    const numericFields = ["phoneNumber", "dong", "ho", "householdCount"];
+
     if (type === "checkbox") {
-      // 체크박스의 경우
-      setFormData((prev) => ({
-        ...prev,
-        [name]: e.target.checked,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: e.target.checked }));
+    } else if (numericFields.includes(name)) {
+      const numericValue = value.replace(/[^0-9]/g, "");
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  // 폼 제출
+  const handleCheckUserId = async () => {
+    const { userId } = formData;
+
+    const idRegex = /^[a-zA-Z0-9]{8,}$/;
+    if (!idRegex.test(userId)) {
+      alert("아이디는 영문+숫자 조합의 8자리 이상이어야 합니다.");
+      return;
+    }
+
+    try {
+      setIsChecking(true);
+      const response = await fetch(
+        `https://fair-project-backend-production.up.railway.app/api/auth/check-userid?userId=${userId}`
+      );
+      const data = await response.json();
+
+      if (data.exists) {
+        setIsDuplicate(true);
+        alert("이미 존재하는 아이디입니다.");
+      } else {
+        setIsDuplicate(false);
+        alert("사용 가능한 아이디입니다.");
+      }
+    } catch (error) {
+      console.error("아이디 중복 확인 오류:", error);
+      alert("중복 확인 중 오류가 발생했습니다.");
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (!formData.personalInfoAgreement) {
+      alert("개인정보이용에 동의하셔야 가입이 가능합니다.");
+      return;
+    }
+
     setMessage("회원가입 진행 중...");
 
     try {
-      // 구매자 회원가입 API
       const response = await fetch(
         "https://fair-project-backend-production.up.railway.app/api/buyers/register",
         {
@@ -49,7 +90,6 @@ function BuyerRegisterForm() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...formData,
-            // householdCount가 문자열일 수 있으니 숫자로 변환
             householdCount: formData.householdCount
               ? parseInt(formData.householdCount, 10)
               : 0,
@@ -60,11 +100,11 @@ function BuyerRegisterForm() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("입주자 회원가입 성공!");
-        // 가입 성공 후 폼 초기화
+        alert("입주자 회원가입 성공!");
         setFormData({
           userId: "",
           password: "",
+          confirmPassword: "",
           name: "",
           phoneNumber: "",
           dong: "",
@@ -74,6 +114,8 @@ function BuyerRegisterForm() {
           householdCount: "",
           personalInfoAgreement: false,
         });
+        setIsDuplicate(false);
+        navigate("/");
       } else {
         setMessage(`오류: ${data.message}`);
       }
@@ -83,125 +125,182 @@ function BuyerRegisterForm() {
     }
   };
 
-  return (
-    <div style={styles.container}>
-      <h2>입주자 회원가입</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label>아이디 (userId)</label>
-        <input
-          type="text"
-          name="userId"
-          value={formData.userId}
-          onChange={handleChange}
-          required
-        />
+  const validateForm = () => {
+    const {
+      userId,
+      password,
+      confirmPassword,
+      phoneNumber,
+      dong,
+      ho,
+      householdCount,
+    } = formData;
 
-        <label>비밀번호 (password)</label>
+    const idRegex = /^[a-zA-Z0-9]{8,}$/;
+    if (!idRegex.test(userId)) {
+      alert("아이디는 영문 8자리 이상이어야 합니다.");
+      return false;
+    }
+
+    const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
+    if (!pwRegex.test(password)) {
+      alert("비밀번호는 영문+숫자 조합의 8자리 이상이어야 합니다.");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+      return false;
+    }
+
+    if (isDuplicate) {
+      alert("이미 존재하는 아이디입니다. 다른 아이디를 사용해주세요.");
+      return false;
+    }
+
+    if (!phoneNumber) {
+      alert("연락처를 입력하세요.");
+      return false;
+    }
+    if (!dong) {
+      alert("동을 입력하세요.");
+      return false;
+    }
+    if (!ho) {
+      alert("호를 입력하세요.");
+      return false;
+    }
+    if (!householdCount) {
+      alert("세대원수를 입력하세요.");
+      return false;
+    }
+
+    return true;
+  };
+
+  return (
+    <div className="register-container buyer-theme">
+      <h2>입주자 회원가입</h2>
+
+      <form className="register-form" onSubmit={handleSubmit}>
+        <div className="id-check-container">
+          <input
+            type="text"
+            name="userId"
+            placeholder="아이디 (영문+숫자, 8자리 이상)"
+            value={formData.userId}
+            onChange={handleChange}
+            required
+          />
+          <button
+            type="button"
+            onClick={handleCheckUserId}
+            disabled={isChecking}
+            className="id-check"
+          >
+            아이디 중복 확인
+          </button>
+        </div>
+
         <input
           type="password"
           name="password"
+          placeholder="비밀번호 (영문+숫자, 8자리 이상)"
           value={formData.password}
           onChange={handleChange}
           required
         />
 
-        <label>계약자명 (name)</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="비밀번호 확인"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
+
         <input
           type="text"
           name="name"
+          placeholder="계약자명"
           value={formData.name}
           onChange={handleChange}
           required
         />
 
-        <label>연락처 (phoneNumber)</label>
         <input
           type="text"
           name="phoneNumber"
+          placeholder="연락처 ('-' 제외)"
           value={formData.phoneNumber}
           onChange={handleChange}
+          required
         />
 
-        <label>동 (dong)</label>
         <input
           type="text"
           name="dong"
+          placeholder="동"
           value={formData.dong}
           onChange={handleChange}
           required
         />
 
-        <label>호 (ho)</label>
         <input
           type="text"
           name="ho"
+          placeholder="호"
           value={formData.ho}
           onChange={handleChange}
           required
         />
 
-        <label>생년월일 (birthDate)</label>
         <input
           type="date"
           name="birthDate"
+          placeholder="생년월일"
           value={formData.birthDate}
           onChange={handleChange}
+          required
         />
 
-        <label>성별 (gender)</label>
-        <select name="gender" value={formData.gender} onChange={handleChange}>
+        <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          required
+        >
           <option value="M">남성</option>
           <option value="F">여성</option>
           <option value="OTHER">기타</option>
         </select>
 
-        <label>세대원수 (householdCount)</label>
         <input
           type="number"
           name="householdCount"
+          placeholder="세대원수"
           value={formData.householdCount}
           onChange={handleChange}
+          required
         />
 
-        <label>
+        <div className="personalInfoAgreement">
           <input
             type="checkbox"
             name="personalInfoAgreement"
             checked={formData.personalInfoAgreement}
             onChange={handleChange}
           />
-          개인정보 이용 동의
-        </label>
+          <h3>개인정보 이용 동의</h3>
+        </div>
 
-        <button type="submit" style={styles.submitButton}>
-          회원가입
-        </button>
+        <button type="submit">회원가입</button>
       </form>
-      {message && <p>{message}</p>}
+
+      {message && <p className="register-footer">{message}</p>}
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "400px",
-    margin: "30px auto",
-    textAlign: "left",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-  },
-  submitButton: {
-    marginTop: "12px",
-    padding: "10px",
-    backgroundColor: "#00796B",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-};
 
 export default BuyerRegisterForm;

@@ -1,0 +1,90 @@
+body {
+  background-color: #ece4d0;
+}
+
+.option-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 92vw;
+  height: 96vh;
+  margin: 0 auto;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  margin-top: 4vw;
+  border-radius: 20px;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+}
+
+.option-detail::-webkit-scrollbar {
+  display: none;
+}
+
+.detail-logo {
+  width: 200px;
+  margin: 7vw 0 10vw;
+}
+
+.detail-title {
+  text-align: center;
+  font-size: 24px;
+}
+
+.detail-subtitle {
+  font-size: 14px;
+  color: #777;
+  margin-top: 1.5rem;
+}
+
+.no-data {
+  margin-top: 2rem;
+  color: #777;
+}
+
+.purchase-card {
+  width: 78vw;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.purchase-card p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+.purchase-card p strong {
+  display: inline-block;
+  width: 5rem;
+  color: #555;
+}
+
+.purchase-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.purchase-buttons button {
+  border: none;
+  background-color: #e1e1e1;
+  padding: 0.6rem 2.3rem;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-btn.active {
+  background-color: #8f1f22;
+  color: #fff;
+}
+
+.cancel-btn.active {
+  background-color: #8f1f22;
+  color: #fff;
+}

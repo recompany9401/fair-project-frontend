@@ -1,0 +1,63 @@
+body {
+  background-color: #ece4d0;
+}
+
+.add-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 92vw;
+  height: 96vh;
+  margin: 0 auto;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  margin-top: 4vw;
+  border-radius: 20px;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+}
+
+.add-product::-webkit-scrollbar {
+  display: none;
+}
+
+.add-product > img {
+  width: 200px;
+  margin: 7vw 0 14vw;
+}
+
+.add-product > h2 {
+  text-align: center;
+  font-size: 24px;
+}
+
+.add-form {
+  width: 78vw;
+  margin: 1rem auto 1.4rem;
+  text-align: center;
+}
+
+.add-form div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.add-form div label {
+  width: 27%;
+  text-align: left;
+}
+
+.add-form div input {
+  width: 73%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  padding: 4px;
+}
+
+.add-form div input:focus {
+  border-color: #8f1f22;
+}
