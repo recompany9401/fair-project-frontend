@@ -1,16 +1,14 @@
-// src/pages/PurchaseDetailPage.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function PurchaseDetailPage() {
-  const { id } = useParams(); // purchase _id
+  const { id } = useParams();
   const [purchase, setPurchase] = useState(null);
 
   useEffect(() => {
     fetchPurchaseDetail();
   }, []);
 
-  // (A) GET /api/admin/purchases/:purchaseId
   const fetchPurchaseDetail = async () => {
     try {
       const res = await fetch(
@@ -34,8 +32,6 @@ function PurchaseDetailPage() {
   return (
     <div style={styles.container}>
       <h2>구매 상세 정보</h2>
-
-      {/* 구매자명 / 동/호수 / 회사명 / 품목 / 상품명 / 옵션 */}
       <p>
         <strong>구매자명:</strong> {purchase.buyerName || "??"}
       </p>
@@ -55,7 +51,6 @@ function PurchaseDetailPage() {
         <strong>옵션:</strong> {purchase.option}
       </p>
 
-      {/* 판매금액 / 할인/할증 / 최종금액 / 계약금 */}
       <p>
         <strong>판매금액:</strong> {purchase.price}
       </p>
@@ -69,7 +64,6 @@ function PurchaseDetailPage() {
         <strong>계약금:</strong> {purchase.deposit}
       </p>
 
-      {/* (B) 계약일자 추가 */}
       <p>
         <strong>계약일자:</strong>{" "}
         {purchase.contractDate
@@ -77,7 +71,6 @@ function PurchaseDetailPage() {
           : ""}
       </p>
 
-      {/* 설치예정일 / 비고 / 상태 */}
       <p>
         <strong>설치예정일:</strong>{" "}
         {purchase.installationDate

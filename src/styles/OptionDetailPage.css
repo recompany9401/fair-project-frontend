@@ -8,11 +8,11 @@ body {
   align-items: center;
   width: 92vw;
   height: 96vh;
-  margin: 0 auto;
+  margin: 4vw auto;
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  margin-top: 4vw;
+  padding: 4vw 0;
   border-radius: 20px;
   overflow-x: scroll;
   -ms-overflow-style: none;

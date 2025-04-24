@@ -1,0 +1,11 @@
+.admin-approvw {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-approvw img {
+  width: 200px;
+  margin: 7vw 0 10vw;
+}

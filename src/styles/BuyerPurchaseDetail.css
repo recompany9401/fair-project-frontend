@@ -1,0 +1,114 @@
+body {
+  background-color: #fcfbf7 !important;
+}
+
+.purchase-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+}
+.purchase-detail::-webkit-scrollbar {
+  display: none;
+}
+
+.purchase-detail img {
+  width: 200px;
+  margin: 7vw 0 10vw;
+}
+
+.top-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #8f1f22;
+  border-radius: 0 0 25px 25px;
+  width: 100%;
+}
+
+.purchase-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.purchase-btn button {
+  font-size: 14px;
+  background-color: #ffffff;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  color: #8f1f22;
+}
+
+.purchase-btn h2 {
+  background-color: #ffffff8a;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  font-size: 14px;
+  margin-right: 1.5rem;
+  cursor: pointer;
+}
+
+.purchase-btn button svg,
+.purchase-btn h2 svg {
+  margin-right: 5px;
+}
+
+/* 테이블 */
+.table-wrap {
+  width: 90vw;
+  background-color: #fff;
+  margin-top: 8vw;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 0 10px;
+}
+
+.table-wrap div {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ececec;
+  padding: 3px;
+}
+
+.table-wrap label {
+  width: 30%;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.table-wrap input,
+.table-wrap textarea {
+  width: 70%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: none;
+  outline: none;
+}
+
+.table-wrap input[readonly] {
+  background-color: #f0f0f0;
+}
+
+.table-wrap textarea {
+  resize: none;
+}
+
+.save-btn {
+  background-color: #8f1f22;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 7vw;
+}
+
+.save-btn:hover {
+  background-color: #6c1313;
+}

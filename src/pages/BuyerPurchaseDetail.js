@@ -1,6 +1,11 @@
-// src/pages/BuyerPurchaseDetail.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import "../styles/BuyerPurchaseDetail.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCartShopping,
+  faRectangleList,
+} from "@fortawesome/free-solid-svg-icons";
 
 function BuyerPurchaseDetail() {
   const { purchaseId } = useParams();
@@ -19,7 +24,6 @@ function BuyerPurchaseDetail() {
     installationDate: "",
     note: "",
   });
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchPurchaseDetail();
@@ -50,15 +54,14 @@ function BuyerPurchaseDetail() {
           note: data.note || "",
         });
       } else {
-        setMessage("상세조회 실패: " + data.message);
+        alert("상세조회 실패 " + data.message);
       }
     } catch (err) {
       console.error("구매 상세 오류:", err);
-      setMessage("서버 오류");
+      alert("서버 오류");
     }
   };
 
-  // 할인/할증, price가 바뀌면 finalPrice 재계산(프론트)
   useEffect(() => {
     const p = Number(formData.price) || 0;
     const d = Number(formData.discountOrSurcharge) || 0;
@@ -74,7 +77,6 @@ function BuyerPurchaseDetail() {
   };
 
   const handleSave = async () => {
-    setMessage("저장 중...");
     try {
       const updateData = {
         itemCategory: formData.itemCategory,
@@ -101,146 +103,134 @@ function BuyerPurchaseDetail() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage("수정 성공!");
-        // 수정 후 목록 페이지로 이동
+        alert("수정이 완료되었습니다.");
         navigate("/buyer-purchase-list");
       } else {
-        setMessage("수정 실패: " + data.message);
+        alert("수정 실패: " + data.message);
       }
     } catch (err) {
       console.error("구매내역 수정 오류:", err);
-      setMessage("서버 오류");
+      alert("서버 오류");
     }
   };
 
+  const handleGoHome = () => {
+    navigate("/buyer-home");
+  };
+
   return (
-    <div style={styles.container}>
-      <h2>구매 상세</h2>
-      {message && <p>{message}</p>}
-
-      <div style={styles.field}>
-        <label>품목</label>
-        <input
-          type="text"
-          name="itemCategory"
-          value={formData.itemCategory}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>업체명</label>
-        <input
-          type="text"
-          name="businessName"
-          value={formData.businessName}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>상품명</label>
-        <input
-          type="text"
-          name="productName"
-          value={formData.productName}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>옵션</label>
-        <input
-          type="text"
-          name="option"
-          value={formData.option}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>판매가</label>
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>할인/할증</label>
-        <input
-          type="number"
-          name="discountOrSurcharge"
-          value={formData.discountOrSurcharge}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>최종금액</label>
-        <input
-          type="number"
-          name="finalPrice"
-          value={formData.finalPrice}
-          readOnly
-        />
-      </div>
-      <div style={styles.field}>
-        <label>계약금</label>
-        <input
-          type="number"
-          name="deposit"
-          value={formData.deposit}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>계약일자</label>
-        <input
-          type="date"
-          name="contractDate"
-          value={formData.contractDate}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>설치예정일</label>
-        <input
-          type="date"
-          name="installationDate"
-          value={formData.installationDate}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={styles.field}>
-        <label>비고</label>
-        <textarea
-          rows="3"
-          name="note"
-          value={formData.note}
-          onChange={handleChange}
-        />
+    <div className="purchase-detail">
+      <div className="top-banner">
+        <img src="/images/logo-white.png" alt="logo" />
+        <div className="purchase-btn">
+          <h2 onClick={handleGoHome}>
+            <FontAwesomeIcon icon={faCartShopping} />
+            구매 정보 입력
+          </h2>
+          <button>
+            <FontAwesomeIcon icon={faRectangleList} />
+            구매 리스트
+          </button>
+        </div>
       </div>
 
-      <button onClick={handleSave} style={styles.saveButton}>
+      <div className="table-wrap">
+        <div>
+          <label>품목</label>
+          <input
+            type="text"
+            name="itemCategory"
+            value={formData.itemCategory}
+            readOnly
+          />
+        </div>
+        <div>
+          <label>업체명</label>
+          <input
+            type="text"
+            name="businessName"
+            value={formData.businessName}
+            readOnly
+          />
+        </div>
+        <div>
+          <label>상품명</label>
+          <input
+            type="text"
+            name="productName"
+            value={formData.productName}
+            readOnly
+          />
+        </div>
+        <div>
+          <label>옵션</label>
+          <input type="text" name="option" value={formData.option} readOnly />
+        </div>
+        <div>
+          <label>판매가</label>
+          <input type="number" name="price" value={formData.price} readOnly />
+        </div>
+        <div>
+          <label>할인/할증</label>
+          <input
+            type="number"
+            name="discountOrSurcharge"
+            value={formData.discountOrSurcharge}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>최종금액</label>
+          <input
+            type="number"
+            name="finalPrice"
+            value={formData.finalPrice}
+            readOnly
+          />
+        </div>
+        <div>
+          <label>계약금</label>
+          <input
+            type="number"
+            name="deposit"
+            value={formData.deposit}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>계약일자</label>
+          <input
+            type="date"
+            name="contractDate"
+            value={formData.contractDate}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>설치예정일</label>
+          <input
+            type="date"
+            name="installationDate"
+            value={formData.installationDate}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>비고</label>
+          <textarea
+            rows="3"
+            name="note"
+            value={formData.note}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      <button onClick={handleSave} className="save-btn">
         저장
       </button>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "600px",
-    margin: "20px auto",
-  },
-  field: {
-    marginBottom: "8px",
-  },
-  saveButton: {
-    marginTop: "16px",
-    backgroundColor: "#007BFF",
-    color: "#fff",
-    border: "none",
-    padding: "10px 16px",
-    borderRadius: "4px",
-  },
-};
 
 export default BuyerPurchaseDetail;

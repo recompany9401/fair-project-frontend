@@ -1,0 +1,29 @@
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4efe4;
+}
+
+.admin-page img {
+  width: 200px;
+  margin: 0 0 10vw;
+}
+
+.admin-page h2 {
+  font-family: 20px;
+  margin-bottom: 50px;
+}
+
+.admin-page div {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.admin-page div button {
+  width: 220px;
+  font-size: 16px;
+}

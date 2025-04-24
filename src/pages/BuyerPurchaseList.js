@@ -1,6 +1,12 @@
-// src/pages/BuyerPurchaseList.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/BuyerPurchaseList.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCartShopping,
+  faRectangleList,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 function BuyerPurchaseList() {
   const navigate = useNavigate();
@@ -9,7 +15,6 @@ function BuyerPurchaseList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredList, setFilteredList] = useState([]);
 
-  // 합계
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalDeposit, setTotalDeposit] = useState(0);
 
@@ -21,7 +26,6 @@ function BuyerPurchaseList() {
       return;
     }
     setBuyerId(storedBuyerId);
-
     fetchPurchaseList(storedBuyerId);
   }, [navigate]);
 
@@ -54,7 +58,6 @@ function BuyerPurchaseList() {
     setTotalDeposit(sumDeposit);
   };
 
-  // 검색
   const handleSearch = (e) => {
     e.preventDefault();
     const term = searchTerm.toLowerCase();
@@ -65,33 +68,45 @@ function BuyerPurchaseList() {
     calcTotals(filtered);
   };
 
-  // 행 클릭 -> 상세 페이지로
   const handleRowClick = (purchaseId) => {
     navigate(`/buyer/purchase-detail/${purchaseId}`);
   };
 
-  return (
-    <div style={styles.container}>
-      <h2>구매 리스트</h2>
+  const handleGoHome = () => {
+    navigate("/buyer-home");
+  };
 
-      {/* 검색바 */}
-      <form onSubmit={handleSearch} style={styles.searchBox}>
+  return (
+    <div className="buyer-purchase">
+      <div className="top-banner">
+        <img src="/images/logo-white.png" alt="logo" />
+        <div className="purchase-btn">
+          <h2 onClick={handleGoHome}>
+            <FontAwesomeIcon icon={faCartShopping} />
+            구매 정보 입력
+          </h2>
+          <button>
+            <FontAwesomeIcon icon={faRectangleList} />
+            구매 리스트
+          </button>
+        </div>
+      </div>
+
+      <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
-          placeholder="품명 검색"
+          placeholder="품명을 입력해 주세요."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={styles.searchInput}
         />
-        <button type="submit" style={styles.searchButton}>
-          검색
+        <button type="submit">
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
       </form>
 
-      <table style={styles.table}>
+      <table className="purchase-table">
         <thead>
           <tr>
-            <th>No</th>
             <th>업체명</th>
             <th>품명</th>
             <th>판매금액</th>
@@ -99,47 +114,35 @@ function BuyerPurchaseList() {
           </tr>
         </thead>
         <tbody>
-          {filteredList.map((p, idx) => (
-            <tr key={p._id} onClick={() => handleRowClick(p._id)}>
-              <td>{idx + 1}</td>
-              <td>{p.businessName}</td>
-              <td>{p.productName}</td>
-              <td>{p.finalPrice}</td>
-              <td>{p.deposit}</td>
+          {filteredList.length === 0 ? (
+            <tr>
+              <td colSpan="5" className="no-result">
+                검색된 내역이 없습니다.
+              </td>
             </tr>
-          ))}
+          ) : (
+            filteredList.map((p, idx) => (
+              <tr key={p._id} onClick={() => handleRowClick(p._id)}>
+                <td>{p.businessName}</td>
+                <td>{p.productName}</td>
+                <td>{p.finalPrice.toLocaleString()}</td>
+                <td>{p.deposit.toLocaleString()}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
 
-      {/* 합계 */}
-      <div style={{ textAlign: "right", marginTop: "8px" }}>
-        <p>총 금액: {totalPrice}</p>
-        <p>총 계약금: {totalDeposit}</p>
+      <div className="totals">
+        <p>
+          총 금액<span>{totalPrice.toLocaleString()}원</span>
+        </p>
+        <p>
+          총 계약금<span>{totalDeposit.toLocaleString()}원</span>
+        </p>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "700px",
-    margin: "30px auto",
-  },
-  searchBox: {
-    display: "flex",
-    marginBottom: "12px",
-  },
-  searchInput: {
-    flex: 1,
-    padding: "8px",
-  },
-  searchButton: {
-    padding: "8px 16px",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-  },
-};
 
 export default BuyerPurchaseList;
