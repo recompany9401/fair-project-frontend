@@ -24,7 +24,7 @@ body {
 
 .detail-logo {
   width: 200px;
-  margin: 7vw 0 10vw;
+  margin: 4vw 0 6vw;
 }
 
 .detail-title {
@@ -43,8 +43,12 @@ body {
   color: #777;
 }
 
+.total-count {
+  width: 80vw;
+}
+
 .purchase-card {
-  width: 78vw;
+  width: 80vw;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);

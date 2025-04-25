@@ -20,9 +20,9 @@ function BusinessRegisterForm() {
   });
 
   const [message, setMessage] = useState("");
+  const [isChecking, setIsChecking] = useState(false);
 
   const [isDuplicate, setIsDuplicate] = useState(false);
-  const [setIsChecking] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -144,11 +144,11 @@ function BusinessRegisterForm() {
         setIsDuplicate(false);
         navigate("/");
       } else {
-        setMessage(`오류: ${data.message}`);
+        alert(`오류: ${data.message}`);
       }
     } catch (err) {
       console.error(err);
-      setMessage("서버 오류가 발생했습니다.");
+      alert("서버 오류가 발생했습니다.");
     }
   };
 

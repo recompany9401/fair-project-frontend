@@ -1,12 +1,11 @@
-// src/pages/BusinessDetailPage.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "../styles/AdminDetailPage.css";
 
 function BusinessDetailPage() {
   const { id } = useParams();
   const [business, setBusiness] = useState(null);
 
-  // 숨길 필드 예: _id, password, role, updatedAt, __v 등
   const hiddenFields = [
     "_id",
     "password",
@@ -16,11 +15,23 @@ function BusinessDetailPage() {
     "approved",
   ];
 
+  const labelMap = {
+    userId: "아이디",
+    name: "사업자명",
+    businessNumber: "사업자번호",
+    representativeName: "대표자명",
+    address: "주소",
+    businessType: "업태",
+    businessCategory: "종목",
+    managerName: "담당자이름",
+    phoneNumber: "연락처",
+    createdAt: "가입일자",
+  };
+
   useEffect(() => {
     fetchBusinessDetail();
   }, []);
 
-  // (A) 상세 API: GET /api/admin/businesses/:id
   const fetchBusinessDetail = async () => {
     try {
       const res = await fetch(
@@ -38,35 +49,51 @@ function BusinessDetailPage() {
     }
   };
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const dateObj = new Date(dateStr);
+    if (isNaN(dateObj.getTime())) return "";
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
   if (!business) {
     return <div>로딩중...</div>;
   }
 
   return (
-    <div style={{ width: "600px", margin: "40px auto" }}>
-      <h2>사업자 상세</h2>
-      <h3>DB에 저장된 정보 (민감 필드 제외)</h3>
-      <ul>
-        {Object.entries(business).map(([key, value]) => {
-          if (hiddenFields.includes(key)) return null;
+    <div className="admin-detail">
+      <div className="detail-header">
+        <img src="/images/logo-white.png" alt="logo" />
+        <h2>사업자 상세 정보</h2>
+      </div>
 
-          // createdAt → 가입 시기
-          if (key === "createdAt") {
-            const createdTime = new Date(value).toLocaleString();
+      <div className="detail-card">
+        <ul>
+          {Object.entries(business).map(([key, value]) => {
+            if (hiddenFields.includes(key) || !labelMap[key]) {
+              return null;
+            }
+
+            if (key === "createdAt") {
+              const dateStr = formatDate(value);
+              return (
+                <li key={key}>
+                  <strong>{labelMap[key]}</strong> {dateStr}
+                </li>
+              );
+            }
+
             return (
               <li key={key}>
-                <strong>{key}:</strong> {createdTime} (가입시기)
+                <strong>{labelMap[key]}</strong> {String(value)}
               </li>
             );
-          }
-
-          return (
-            <li key={key}>
-              <strong>{key}:</strong> {String(value)}
-            </li>
-          );
-        })}
-      </ul>
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

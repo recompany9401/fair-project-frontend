@@ -1,0 +1,29 @@
+.admin-detail {
+  margin: 0 auto;
+  background-color: #fcfbf7;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.detail-header {
+  background-color: #8f1f22;
+  border-radius: 0 0 25px 25px;
+  position: relative;
+}
+
+.detail-header img {
+  width: 200px;
+  margin: 7vw 0 4vw;
+}
+
+.detail-header h2 {
+  color: #fff;
+  font-size: 18px;
+  padding: 1.4rem 0;
+}
+
+li strong {
+  font-weight: 600;
+  width: 30%;
+  text-align: left;
+}

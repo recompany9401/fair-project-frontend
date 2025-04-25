@@ -8,14 +8,19 @@ function AddProductPage() {
   const storedBusinessId = localStorage.getItem("businessId");
   const storedBusinessName = localStorage.getItem("businessName");
 
+  const [allCategories, setAllCategories] = useState([]);
+  const [catProductMap, setCatProductMap] = useState({});
+
+  const [useExistingCategory, setUseExistingCategory] = useState(true);
+  const [useExistingProductName, setUseExistingProductName] = useState(true);
+
   const [formData, setFormData] = useState({
+    businessName: "",
     itemCategory: "",
     productName: "",
     option: "",
     price: "",
   });
-
-  const [message] = useState("");
 
   useEffect(() => {
     if (!storedBusinessId || !storedBusinessName) {
@@ -23,15 +28,78 @@ function AddProductPage() {
       navigate("/");
       return;
     }
+
     setFormData((prev) => ({
       ...prev,
       businessName: storedBusinessName,
     }));
+
+    fetchAllProducts();
   }, [storedBusinessId, storedBusinessName, navigate]);
+
+  const fetchAllProducts = async () => {
+    try {
+      const res = await fetch(
+        "https://fair-project-backend-production.up.railway.app/api/products/all"
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        const catMap = {};
+        data.forEach((prod) => {
+          const cat = prod.itemCategory;
+          const pName = prod.productName;
+          if (!catMap[cat]) {
+            catMap[cat] = new Set();
+          }
+          catMap[cat].add(pName);
+        });
+
+        const sortedCatMap = {};
+        const catArr = Object.keys(catMap).sort((a, b) => a.localeCompare(b));
+        catArr.forEach((cat) => {
+          const prodArr = Array.from(catMap[cat]).sort((a, b) =>
+            a.localeCompare(b)
+          );
+          sortedCatMap[cat] = prodArr;
+        });
+
+        setCatProductMap(sortedCatMap);
+        setAllCategories(catArr);
+      } else {
+        console.error("상품 전체 조회 실패:", data.message);
+      }
+    } catch (err) {
+      console.error("fetchAllProducts 오류:", err);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategorySelect = (e) => {
+    const val = e.target.value;
+    if (val === "__CUSTOM__") {
+      setUseExistingCategory(false);
+      setFormData((prev) => ({ ...prev, itemCategory: "" }));
+    } else {
+      setUseExistingCategory(true);
+      setFormData((prev) => ({ ...prev, itemCategory: val, productName: "" }));
+      setUseExistingProductName(true);
+    }
+  };
+
+  const handleProductSelect = (e) => {
+    const val = e.target.value;
+    if (val === "__CUSTOM__") {
+      setUseExistingProductName(false);
+      setFormData((prev) => ({ ...prev, productName: "" }));
+    } else {
+      setUseExistingProductName(true);
+      setFormData((prev) => ({ ...prev, productName: val }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -101,24 +169,92 @@ function AddProductPage() {
 
         <div>
           <label>품목</label>
-          <input
-            type="text"
-            name="itemCategory"
-            value={formData.itemCategory}
-            onChange={handleChange}
-            required
-          />
+          <div className="select-input-group">
+            {allCategories.length > 0 ? (
+              <>
+                <select
+                  value={
+                    useExistingCategory ? formData.itemCategory : "__CUSTOM__"
+                  }
+                  onChange={handleCategorySelect}
+                >
+                  <option value="">카테고리 선택</option>
+                  {allCategories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                  <option value="__CUSTOM__">직접 입력하기</option>
+                </select>
+
+                {!useExistingCategory && (
+                  <div className="custom-input-wrapper">
+                    <input
+                      type="text"
+                      name="itemCategory"
+                      value={formData.itemCategory}
+                      onChange={handleChange}
+                      placeholder="새 품목 입력"
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <input
+                type="text"
+                name="itemCategory"
+                value={formData.itemCategory}
+                onChange={handleChange}
+                required
+              />
+            )}
+          </div>
         </div>
 
         <div>
           <label>상품명</label>
-          <input
-            type="text"
-            name="productName"
-            value={formData.productName}
-            onChange={handleChange}
-            required
-          />
+          <div className="select-input-group">
+            {useExistingCategory &&
+            formData.itemCategory &&
+            catProductMap[formData.itemCategory] ? (
+              <>
+                <select
+                  value={
+                    useExistingProductName ? formData.productName : "__CUSTOM__"
+                  }
+                  onChange={handleProductSelect}
+                >
+                  <option value="">상품명 선택</option>
+                  {catProductMap[formData.itemCategory].map((pName) => (
+                    <option key={pName} value={pName}>
+                      {pName}
+                    </option>
+                  ))}
+                  <option value="__CUSTOM__">직접 입력하기</option>
+                </select>
+
+                {!useExistingProductName && (
+                  <div className="custom-input-wrapper">
+                    <input
+                      type="text"
+                      name="productName"
+                      value={formData.productName}
+                      onChange={handleChange}
+                      placeholder="새 상품명 입력"
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <input
+                type="text"
+                name="productName"
+                value={formData.productName}
+                onChange={handleChange}
+                required
+              />
+            )}
+          </div>
         </div>
 
         <div>
@@ -145,7 +281,6 @@ function AddProductPage() {
 
         <button type="submit">등록하기</button>
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 }

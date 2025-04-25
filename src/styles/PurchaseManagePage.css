@@ -1,0 +1,30 @@
+.fa-filter {
+  color: #fff;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+th > span {
+  color: #fff;
+  margin-left: 4px;
+}
+
+.search-form {
+  position: relative;
+}
+
+.select-wrapper {
+  margin-right: 15px;
+}
+
+select {
+  font-family: "NanumSquareNeo";
+  color: #333;
+  border: none;
+  outline: none;
+}
+
+.search-form button {
+  position: absolute;
+  right: 10px;
+}

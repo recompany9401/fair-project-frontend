@@ -1,0 +1,51 @@
+.ManagePage {
+  margin: 0 auto;
+  background-color: #fcfbf7;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.detail-header {
+  background-color: #8f1f22;
+  border-radius: 0 0 25px 25px;
+  position: relative;
+}
+
+.detail-header img {
+  width: 200px;
+  margin: 7vw 0 4vw;
+}
+
+.detail-header h2 {
+  color: #fff;
+  font-size: 18px;
+  padding: 1.4rem 0;
+}
+
+.ManagePage table {
+  width: 90%;
+  margin: 1rem auto;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ManagePage thead th {
+  background-color: #8f1f22;
+  color: #fff;
+  padding: 0.8rem;
+}
+
+.ManagePage tbody td {
+  border-bottom: 1px solid #eee;
+  padding: 0.8rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ManagePage tbody tr:last-child td {
+  border-bottom: none;
+}

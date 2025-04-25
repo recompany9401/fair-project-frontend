@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "../styles/PurchaseDetailPage.css"; // CSS 파일 (예시)
 
 function PurchaseDetailPage() {
   const { id } = useParams();
   const [purchase, setPurchase] = useState(null);
+
+  // 상태 한글 변환 함수
+  const translateStatus = (status) => {
+    if (!status) return "";
+    if (status === "CONFIRMED") return "확정";
+    if (status === "CANCELED") return "취소";
+    if (status === "PENDING") return "미확정";
+    return status;
+  };
 
   useEffect(() => {
     fetchPurchaseDetail();
@@ -29,69 +39,87 @@ function PurchaseDetailPage() {
     return <div>로딩중...</div>;
   }
 
+  // 날짜 변환 함수 (YYYY.MM.DD)
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const dateObj = new Date(dateStr);
+    if (isNaN(dateObj.getTime())) return "";
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
   return (
-    <div style={styles.container}>
-      <h2>구매 상세 정보</h2>
-      <p>
-        <strong>구매자명:</strong> {purchase.buyerName || "??"}
-      </p>
-      <p>
-        <strong>동/호수:</strong> {purchase.dongHo || ""}
-      </p>
-      <p>
-        <strong>회사명:</strong> {purchase.businessName || ""}
-      </p>
-      <p>
-        <strong>품목:</strong> {purchase.itemCategory}
-      </p>
-      <p>
-        <strong>상품명:</strong> {purchase.productName}
-      </p>
-      <p>
-        <strong>옵션:</strong> {purchase.option}
-      </p>
+    <div className="ManagePage">
+      <div className="detail-header">
+        <img src="/images/logo-white.png" alt="logo" />
+        <h2>구매 상세 정보</h2>
+      </div>
 
-      <p>
-        <strong>판매금액:</strong> {purchase.price}
-      </p>
-      <p>
-        <strong>할인/할증:</strong> {purchase.discountOrSurcharge || 0}
-      </p>
-      <p>
-        <strong>최종금액:</strong> {purchase.finalPrice}
-      </p>
-      <p>
-        <strong>계약금:</strong> {purchase.deposit}
-      </p>
-
-      <p>
-        <strong>계약일자:</strong>{" "}
-        {purchase.contractDate
-          ? new Date(purchase.contractDate).toLocaleDateString()
-          : ""}
-      </p>
-
-      <p>
-        <strong>설치예정일:</strong>{" "}
-        {purchase.installationDate
-          ? new Date(purchase.installationDate).toLocaleDateString()
-          : ""}
-      </p>
-      <p>
-        <strong>비고:</strong> {purchase.note || ""}
-      </p>
-      <p>
-        <strong>상태:</strong> {purchase.status}
-      </p>
+      {/* 테이블 형태로 표시 */}
+      <table className="detail-table">
+        <tbody>
+          <tr>
+            <td className="label-cell">구매자명</td>
+            <td>{purchase.buyerName || "??"}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">동/호수</td>
+            <td>{purchase.dongHo || ""}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">회사명</td>
+            <td>{purchase.businessName || ""}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">품목</td>
+            <td>{purchase.itemCategory}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">상품명</td>
+            <td>{purchase.productName}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">옵션</td>
+            <td>{purchase.option}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">판매금액</td>
+            <td>{purchase.price}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">할인/할증</td>
+            <td>{purchase.discountOrSurcharge || 0}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">최종금액</td>
+            <td>{purchase.finalPrice}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">계약금</td>
+            <td>{purchase.deposit}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">계약일자</td>
+            <td>{formatDate(purchase.contractDate)}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">설치예정일</td>
+            <td>{formatDate(purchase.installationDate)}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">비고</td>
+            <td>{purchase.note || ""}</td>
+          </tr>
+          <tr>
+            <td className="label-cell">상태</td>
+            <td>{translateStatus(purchase.status)}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "600px",
-    margin: "40px auto",
-  },
-};
 
 export default PurchaseDetailPage;

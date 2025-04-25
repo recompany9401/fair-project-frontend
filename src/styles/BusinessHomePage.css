@@ -24,7 +24,7 @@ body {
 
 .business-header img {
   width: 200px;
-  margin: 7vw 0;
+  margin: 4vw 0;
 }
 
 .business-header h2 {
@@ -45,7 +45,7 @@ body {
   border-radius: 999px;
   padding: 0.5rem 1rem;
   width: 100%;
-  max-width: 78vw;
+  max-width: 80vw;
   margin: 2rem auto 1.4rem;
 }
 

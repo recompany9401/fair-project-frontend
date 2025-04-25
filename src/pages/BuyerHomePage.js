@@ -160,7 +160,7 @@ function BuyerHomePage() {
       );
       const data = await response.json();
       if (response.ok) {
-        alert("구매 정보 등록 성공!");
+        alert("구매 정보 등록을 완료했습니다.");
         resetForm();
       } else {
         alert(`오류: ${data.message}`);

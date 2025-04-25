@@ -1,0 +1,91 @@
+.approve-detail-page {
+  margin: 0 auto;
+  background-color: #fcfbf7;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.detail-header {
+  background-color: #8f1f22;
+  border-radius: 0 0 25px 25px;
+  position: relative;
+}
+
+.detail-header img {
+  width: 200px;
+  margin: 2vw 0 2vw;
+}
+
+.detail-header h2 {
+  color: #fff;
+  font-size: 22px;
+  padding: 1rem 0 2rem;
+}
+
+.detail-card {
+  background-color: #fff;
+  margin: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.detail-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.detail-card li {
+  display: flex;
+  justify-content: left;
+  border-bottom: 1px solid #eee;
+  padding: 0.6rem 0;
+  font-size: 16px;
+}
+
+.detail-card li:last-child {
+  border-bottom: none;
+}
+
+.field-label {
+  font-weight: 600;
+  width: 30%;
+  text-align: left;
+}
+
+.field-value {
+  color: #666;
+}
+
+.detail-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.detail-buttons button {
+  border: none;
+  outline: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background-color: #8f1f22;
+  color: #fff;
+}
+
+.back-btn {
+  background-color: #c4c4c4;
+}
+
+.detail-loading {
+  text-align: center;
+  margin: 2rem;
+  font-size: 1rem;
+  color: #555;
+}

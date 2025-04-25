@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/AdminApprovePage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function AdminApprovePage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 탭 상태: "business" | "buyer"
   const [activeTab, setActiveTab] = useState("business");
 
-  // 사업자, 입주자 데이터
   const [unapprovedBusinesses, setUnapprovedBusinesses] = useState([]);
   const [unapprovedBuyers, setUnapprovedBuyers] = useState([]);
 
-  // 검색어 상태 (사업자 검색어, 입주자 검색어 따로)
   const [bizSearch, setBizSearch] = useState("");
   const [buyerSearch, setBuyerSearch] = useState("");
 
   useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+
     fetchUnapproved();
   }, []);
 
   const fetchUnapproved = async () => {
     try {
-      // (1) 미승인 사업자 조회
       const bizRes = await fetch(
         `https://fair-project-backend-production.up.railway.app/api/admin/businesses?approved=false`
       );
       const bizData = await bizRes.json();
 
-      // (2) 미승인 입주자 조회
       const buyerRes = await fetch(
         `https://fair-project-backend-production.up.railway.app/api/admin/buyers?approved=false`
       );
@@ -51,7 +51,6 @@ function AdminApprovePage() {
     }
   };
 
-  // 테이블 클릭 시 상세 승인 페이지로 이동
   const handleBusinessClick = (businessId) => {
     navigate(`/admin/approve-detail/business/${businessId}`);
   };
@@ -59,11 +58,8 @@ function AdminApprovePage() {
     navigate(`/admin/approve-detail/buyer/${buyerId}`);
   };
 
-  // 검색 폼 제출 핸들러 (사업자용)
   const handleBizSearch = async (e) => {
     e.preventDefault();
-    // 서버에서 검색 API 호출하거나, 클라이언트 필터링
-    // 여기서는 서버로 보낸다고 가정
     try {
       const res = await fetch(
         `https://fair-project-backend-production.up.railway.app/api/admin/businesses?approved=false&search=${encodeURIComponent(
@@ -81,10 +77,8 @@ function AdminApprovePage() {
     }
   };
 
-  // 검색 폼 제출 핸들러 (입주자용)
   const handleBuyerSearch = async (e) => {
     e.preventDefault();
-    // 서버에서 검색 API 호출하거나, 클라이언트 필터링
     try {
       const res = await fetch(
         `https://fair-project-backend-production.up.railway.app/api/admin/buyers?approved=false&search=${encodeURIComponent(
@@ -104,28 +98,27 @@ function AdminApprovePage() {
 
   return (
     <div className="admin-approve-page">
-      {/* 탭 메뉴 */}
       <div className="tab-menu">
-        <button
-          className={activeTab === "business" ? "active" : ""}
-          onClick={() => setActiveTab("business")}
-        >
-          사업자
-        </button>
-        <button
-          className={activeTab === "buyer" ? "active" : ""}
-          onClick={() => setActiveTab("buyer")}
-        >
-          입주자
-        </button>
+        <img src="/images/logo-white.png" alt="logo" />
+        <div>
+          <button
+            className={activeTab === "business" ? "active" : ""}
+            onClick={() => setActiveTab("business")}
+          >
+            사업자
+          </button>
+          <button
+            className={activeTab === "buyer" ? "active" : ""}
+            onClick={() => setActiveTab("buyer")}
+          >
+            입주자
+          </button>
+        </div>
       </div>
 
-      {/* 탭 내용 */}
       <div className="tab-content">
-        {/* 사업자 탭 */}
         {activeTab === "business" && (
           <div className="tab-panel">
-            <h2>미승인 사업자 목록</h2>
             <form className="search-form" onSubmit={handleBizSearch}>
               <input
                 type="text"
@@ -165,10 +158,8 @@ function AdminApprovePage() {
           </div>
         )}
 
-        {/* 입주자 탭 */}
         {activeTab === "buyer" && (
           <div className="tab-panel">
-            <h2>미승인 입주자 목록</h2>
             <form className="search-form" onSubmit={handleBuyerSearch}>
               <input
                 type="text"

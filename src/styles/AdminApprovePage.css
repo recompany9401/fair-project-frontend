@@ -1,11 +1,71 @@
-.admin-approvw {
+.admin-approve-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: #fcfbf7;
 }
 
-.admin-approvw img {
+.admin-approve-page img {
   width: 200px;
-  margin: 7vw 0 10vw;
+  margin: 2vw 0 3vw;
+}
+
+.tab-menu {
+  text-align: center;
+  width: 100vw;
+  background-color: #8f1f22;
+  border-radius: 0 0 25px 25px;
+}
+
+.tab-menu button {
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0.5rem 5rem;
+  border-radius: 20px;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0 2vw 2vw;
+}
+
+.tab-menu button.active {
+  background-color: #fff;
+  color: #8f1f22;
+  font-weight: bold;
+}
+
+.tab-menu button:not(.active) {
+  background-color: #ffffff40;
+  color: #ffffff6a;
+}
+
+.tab-content {
+  width: 90vw;
+}
+
+.approve-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.approve-table thead th {
+  background-color: #8f1f22;
+  color: #fff;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.approve-table tbody td {
+  padding: 0.8rem 0.2rem;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.approve-table tbody tr:last-child td {
+  border-bottom: none;
 }

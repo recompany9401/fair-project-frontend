@@ -65,7 +65,28 @@ function BusinessHomePage() {
       grouped[category][pName].push(opt);
     });
 
-    setGroupedData(grouped);
+    const sortedGrouped = {};
+    const sortedCategories = Object.keys(grouped).sort((a, b) =>
+      a.localeCompare(b)
+    );
+
+    sortedCategories.forEach((cat) => {
+      const productMap = grouped[cat];
+      const sortedProducts = Object.keys(productMap).sort((a, b) =>
+        a.localeCompare(b)
+      );
+
+      const newProductMap = {};
+      sortedProducts.forEach((pName) => {
+        const optArray = productMap[pName];
+        optArray.sort((x, y) => x.localeCompare(y));
+        newProductMap[pName] = optArray;
+      });
+
+      sortedGrouped[cat] = newProductMap;
+    });
+
+    setGroupedData(sortedGrouped);
   };
 
   const handleSearch = (e) => {

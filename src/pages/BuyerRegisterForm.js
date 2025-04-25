@@ -80,8 +80,6 @@ function BuyerRegisterForm() {
       return;
     }
 
-    setMessage("회원가입 진행 중...");
-
     try {
       const response = await fetch(
         "https://fair-project-backend-production.up.railway.app/api/buyers/register",
@@ -100,7 +98,7 @@ function BuyerRegisterForm() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("입주자 회원가입 성공!");
+        alert("회원가입이 완료됐습니다.");
         setFormData({
           userId: "",
           password: "",
@@ -117,11 +115,11 @@ function BuyerRegisterForm() {
         setIsDuplicate(false);
         navigate("/");
       } else {
-        setMessage(`오류: ${data.message}`);
+        alert(`오류: ${data.message}`);
       }
     } catch (err) {
       console.error(err);
-      setMessage("서버 오류가 발생했습니다.");
+      alert("서버 오류가 발생했습니다.");
     }
   };
 

@@ -8,6 +8,7 @@ function OptionDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 쿼리 파라미터 추출
   const searchParams = new URLSearchParams(location.search);
   const businessId = searchParams.get("businessId");
   const itemCategory = searchParams.get("itemCategory");
@@ -23,14 +24,17 @@ function OptionDetailPage() {
       navigate("/");
       return;
     }
+    // 초기에는 검색어 없이 fetch
     fetchOptionPurchases("");
   }, [businessId, itemCategory, productName, option, navigate]);
 
+  // 검색 폼 제출
   const handleSearch = (e) => {
     e.preventDefault();
     fetchOptionPurchases(searchTerm);
   };
 
+  // 서버에서 구매 내역 조회
   const fetchOptionPurchases = async (searchKeyword) => {
     try {
       let query =
@@ -49,6 +53,13 @@ function OptionDetailPage() {
       const data = await res.json();
 
       if (res.ok) {
+        // 최신 등록순 (createdAt 내림차순)
+        data.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA; // 내림차순
+        });
+
         setPurchases(data);
       } else {
         console.error("옵션 구매내역 실패:", data.message);
@@ -58,6 +69,7 @@ function OptionDetailPage() {
     }
   };
 
+  // 상태 변경 요청
   const handleStatusUpdate = async (purchaseId, newStatus) => {
     try {
       const res = await fetch(
@@ -70,6 +82,7 @@ function OptionDetailPage() {
       );
       const data = await res.json();
       if (res.ok) {
+        // 상태 업데이트 성공 시 로컬 state 반영
         setPurchases((prev) =>
           prev.map((p) =>
             p._id === purchaseId ? { ...p, status: newStatus } : p
@@ -91,6 +104,7 @@ function OptionDetailPage() {
         {itemCategory} / {productName} / {option}
       </p>
 
+      {/* 검색 폼 */}
       <form className="search-form" onSubmit={handleSearch}>
         <input
           type="text"
@@ -103,6 +117,12 @@ function OptionDetailPage() {
         </button>
       </form>
 
+      {/* 총 개수 */}
+      <h3 className="total-count">
+        total <span>{purchases.length}</span>
+      </h3>
+
+      {/* 구매 내역 목록 */}
       {purchases.length === 0 ? (
         <p className="no-data">구매 내역이 없습니다.</p>
       ) : (
@@ -132,6 +152,7 @@ function OptionDetailPage() {
                 <strong>계약금</strong> {purchase.deposit?.toLocaleString()}원
               </p>
 
+              {/* 확인/취소 버튼 */}
               <div className="purchase-buttons">
                 <button
                   className={`confirm-btn ${isConfirmed ? "active" : ""}`}

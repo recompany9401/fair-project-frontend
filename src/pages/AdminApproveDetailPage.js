@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import "../styles/AdminApproveDetailPage.css";
 
 function AdminApproveDetailPage() {
   const navigate = useNavigate();
   const { type, id } = useParams();
 
   const [account, setAccount] = useState(null);
-
-  const hiddenFields = [
-    "_id",
-    "role",
-    "approved",
-    "updatedAt",
-    "__v",
-    "personalInfoAgreement",
-    "password",
-  ];
 
   useEffect(() => {
     fetchAccountDetail();
@@ -65,68 +56,100 @@ function AdminApproveDetailPage() {
         alert(`승인 실패: ${data.message}`);
         return;
       }
-      alert(data.message || "가입 승인 완료!");
-
+      alert(data.message || "가입 승인 완료");
       setAccount((prev) => ({ ...prev, approved: true }));
     } catch (err) {
       console.error("가입 승인 오류:", err);
-      alert("서버 오류!");
+      alert("서버 오류");
     }
   }
 
+  function handleGoBack() {
+    const activeTab = type === "buyer" ? "buyer" : "business";
+    navigate("/admin/approve", { state: { activeTab } });
+  }
+
   if (!account) {
-    return <div>로딩중...</div>;
+    return <div className="detail-loading">로딩중...</div>;
+  }
+
+  function formatDateOnly(value) {
+    if (!value) return "";
+    const dateObj = new Date(value);
+    if (isNaN(dateObj.getTime())) return "";
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  }
+
+  function formatGender(g) {
+    if (g === "M") return "남자";
+    if (g === "F") return "여자";
+    return "기타";
+  }
+
+  let displayFields = [];
+
+  if (type === "business") {
+    displayFields = [
+      { label: "아이디", value: account.userId },
+      { label: "사업자명", value: account.name },
+      { label: "사업자번호", value: account.businessNumber },
+      { label: "대표자명", value: account.representativeName },
+      { label: "주소", value: account.address },
+      { label: "업태", value: account.businessType },
+      { label: "종목", value: account.businessCategory },
+      { label: "담당자이름", value: account.managerName },
+      { label: "연락처", value: account.phoneNumber },
+      { label: "가입일자", value: formatDateOnly(account.createdAt) },
+    ];
+  } else {
+    const dongHoStr =
+      account.dong && account.ho ? `${account.dong}동 ${account.ho}호` : "";
+
+    displayFields = [
+      { label: "아이디", value: account.userId },
+      { label: "이름", value: account.name },
+      { label: "전화번호", value: account.phoneNumber },
+      { label: "동/호수", value: dongHoStr },
+      { label: "생년월일", value: formatDateOnly(account.birthDate) },
+      { label: "성별", value: formatGender(account.gender) },
+      { label: "세대원수", value: account.householdCount },
+      { label: "가입일자", value: formatDateOnly(account.createdAt) },
+    ];
   }
 
   return (
-    <div style={styles.container}>
-      <h2>{type === "business" ? "사업자 상세" : "입주자 상세"}</h2>
+    <div className="approve-detail-page">
+      <div className="detail-header">
+        <img src="/images/logo-white.png" alt="logo" />
+        <h2>{type === "business" ? "사업자 상세" : "입주자 상세"}</h2>
+      </div>
 
-      <h3>DB에 저장된 정보 (일부 필드 숨김)</h3>
-      <ul>
-        {Object.entries(account).map(([key, value]) => {
-          if (hiddenFields.includes(key)) return null;
-
-          if (key === "createdAt" && value) {
-            const joinedTime = new Date(value).toLocaleString();
-            return (
-              <li key={key}>
-                <strong>{key}:</strong> {joinedTime} (가입시기)
-              </li>
-            );
-          }
-          return (
-            <li key={key}>
-              <strong>{key}:</strong> {String(value)}
+      <div className="detail-card">
+        <ul>
+          {displayFields.map((field, idx) => (
+            <li key={idx}>
+              <strong className="field-label">{field.label}</strong>
+              <span className="field-value">{field.value || ""}</span>
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      </div>
 
-      {!account.approved && (
-        <button style={styles.approveBtn} onClick={handleApprove}>
-          가입 승인
+      <div className="detail-buttons">
+        {!account.approved && (
+          <button className="approve-btn" onClick={handleApprove}>
+            가입 승인
+          </button>
+        )}
+        <button className="back-btn" onClick={handleGoBack}>
+          뒤로가기
         </button>
-      )}
+      </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: "600px",
-    margin: "40px auto",
-    textAlign: "left",
-  },
-  approveBtn: {
-    marginTop: "20px",
-    padding: "10px 16px",
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-};
 
 export default AdminApproveDetailPage;
