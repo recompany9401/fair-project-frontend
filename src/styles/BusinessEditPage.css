@@ -1,0 +1,98 @@
+.business-header {
+  margin-bottom: 20px;
+}
+
+.edit-table {
+  width: 90vw;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 0.9rem;
+  background-color: #fff;
+  border-radius: 4px;
+  table-layout: fixed;
+}
+
+.edit-table thead th:nth-child(1),
+.edit-table tbody td:nth-child(1) {
+  width: 15%;
+}
+.edit-table thead th:nth-child(2),
+.edit-table tbody td:nth-child(2) {
+  width: 20%;
+}
+.edit-table thead th:nth-child(3),
+.edit-table tbody td:nth-child(3) {
+  width: 25%;
+}
+.edit-table thead th:nth-child(4),
+.edit-table tbody td:nth-child(4) {
+  width: 15%;
+}
+.edit-table thead th:nth-child(5),
+.edit-table tbody td:nth-child(5) {
+  width: 10%;
+}
+
+.edit-table td {
+  border-bottom: 1px solid #eee;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.edit-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.edit-table thead th {
+  background-color: #8f1f22;
+  color: #fff;
+  font-size: 12px;
+  padding: 10px 2px;
+}
+
+input {
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  padding: 4px;
+}
+
+input:focus {
+  outline: none;
+}
+
+.delete-btn {
+  background-color: #8f1f22;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 4px;
+  font-size: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #6a1414;
+}
+
+.save-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.save-button {
+  background-color: #8f1f22;
+  color: #fff;
+  border: none;
+  padding: 7px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #6a1414;
+}
