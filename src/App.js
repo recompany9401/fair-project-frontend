@@ -18,6 +18,7 @@ import PurchaseManagePage from "./pages/PurchaseManagePage";
 import AdminApprovePage from "./pages/AdminApprovePage";
 import AdminApproveDetailPage from "./pages/AdminApproveDetailPage";
 import PurchaseDetailPage from "./pages/PurchaseDetailPage";
+import BusinessEditPage from "./pages/BusinessEditPage";
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
 
         <Route path="/business-home" element={<BusinessHomePage />} />
         <Route path="/business/add-product" element={<AddProductPage />} />
+        <Route
+          path="/business/edit-all-products"
+          element={<BusinessEditPage />}
+        />
         <Route path="/buyer-home" element={<BuyerHomePage />} />
         <Route path="/buyer-purchase-list" element={<BuyerPurchaseList />} />
         <Route

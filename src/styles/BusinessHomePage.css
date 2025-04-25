@@ -1,5 +1,5 @@
 body {
-  background-color: #ece4d0;
+  background-color: #8f1f22;
 }
 
 .business-homepage {
@@ -149,6 +149,6 @@ body {
   color: #666;
 }
 
-.add-button {
-  margin-bottom: 40px;
+.business-btn button {
+  margin: 0 10px 40px;
 }

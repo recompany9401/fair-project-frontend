@@ -114,6 +114,32 @@ function BuyerPurchaseDetail() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://fair-project-backend-production.up.railway.app/api/purchases/${purchaseId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("삭제가 완료되었습니다.");
+        navigate("/buyer-purchase-list");
+      } else {
+        alert("삭제 실패: " + data.message);
+      }
+    } catch (err) {
+      console.error("구매내역 삭제 오류:", err);
+      alert("서버 오류가 발생했습니다.");
+    }
+  };
+
   const handleGoHome = () => {
     navigate("/buyer-home");
   };
@@ -226,9 +252,14 @@ function BuyerPurchaseDetail() {
         </div>
       </div>
 
-      <button onClick={handleSave} className="save-btn">
-        저장
-      </button>
+      <div>
+        <button onClick={handleSave} className="save-btn">
+          저장
+        </button>
+        <button onClick={handleDelete} className="del-btn">
+          삭제
+        </button>
+      </div>
     </div>
   );
 }

@@ -119,6 +119,10 @@ function BusinessHomePage() {
     navigate("/business/add-product");
   };
 
+  const handleEditAllProducts = () => {
+    navigate("/business/edit-all-products");
+  };
+
   return (
     <div className="business-homepage">
       <div className="business-header">
@@ -189,9 +193,12 @@ function BusinessHomePage() {
         )}
       </div>
 
-      <button className="add-button" onClick={handleAddProduct}>
-        품목 추가
-      </button>
+      <div className="business-btn">
+        <button className="add-button" onClick={handleAddProduct}>
+          품목 추가
+        </button>
+        <button onClick={handleEditAllProducts}>품목 수정</button>
+      </div>
     </div>
   );
 }

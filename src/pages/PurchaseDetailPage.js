@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "../styles/PurchaseDetailPage.css"; // CSS 파일 (예시)
+import "../styles/PurchaseDetailPage.css";
 
 function PurchaseDetailPage() {
   const { id } = useParams();
   const [purchase, setPurchase] = useState(null);
 
-  // 상태 한글 변환 함수
   const translateStatus = (status) => {
     if (!status) return "";
     if (status === "CONFIRMED") return "확정";
@@ -39,7 +38,6 @@ function PurchaseDetailPage() {
     return <div>로딩중...</div>;
   }
 
-  // 날짜 변환 함수 (YYYY.MM.DD)
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const dateObj = new Date(dateStr);
@@ -57,7 +55,6 @@ function PurchaseDetailPage() {
         <h2>구매 상세 정보</h2>
       </div>
 
-      {/* 테이블 형태로 표시 */}
       <table className="detail-table">
         <tbody>
           <tr>

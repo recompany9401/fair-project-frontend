@@ -1,5 +1,5 @@
 body {
-  background-color: #fcfbf7 !important;
+  background-color: #8f1f22;
 }
 
 .purchase-detail {
@@ -98,7 +98,8 @@ body {
   resize: none;
 }
 
-.save-btn {
+.save-btn,
+.del-btn {
   background-color: #8f1f22;
   color: #fff;
   padding: 0.5rem 1rem;
@@ -106,9 +107,9 @@ body {
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
-  margin-top: 7vw;
+  margin: 7vw 2vw;
 }
 
-.save-btn:hover {
+.save-btn:hover .del-btn:hover {
   background-color: #6c1313;
 }
