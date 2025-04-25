@@ -21,15 +21,24 @@ function BusinessRegisterForm() {
 
   const [message, setMessage] = useState("");
   const [isChecking, setIsChecking] = useState(false);
-
   const [isDuplicate, setIsDuplicate] = useState(false);
+
+  const alphanumericRegex = /[^a-zA-Z0-9]/g;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     let sanitizedValue = value;
+
+    if (
+      name === "userId" ||
+      name === "password" ||
+      name === "confirmPassword"
+    ) {
+      sanitizedValue = sanitizedValue.replace(alphanumericRegex, "");
+    }
+
     if (name === "businessNumber" || name === "phoneNumber") {
-      sanitizedValue = value.replace(/[^0-9]/g, "");
+      sanitizedValue = sanitizedValue.replace(/[^0-9]/g, "");
     }
 
     setFormData((prev) => ({
@@ -74,7 +83,7 @@ function BusinessRegisterForm() {
     const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
 
     if (!idRegex.test(userId)) {
-      alert("아이디는 영문 8자리 이상이어야 합니다.");
+      alert("아이디는 영문+숫자 8자리 이상이어야 합니다.");
       return false;
     }
 
@@ -162,7 +171,7 @@ function BusinessRegisterForm() {
             name="userId"
             value={formData.userId}
             onChange={handleChange}
-            placeholder="아이디"
+            placeholder="아이디 (영문+숫자)"
             required
           />
           <button
@@ -179,7 +188,7 @@ function BusinessRegisterForm() {
           name="password"
           value={formData.password}
           onChange={handleChange}
-          placeholder="비밀번호"
+          placeholder="비밀번호 (영문+숫자)"
           required
         />
 

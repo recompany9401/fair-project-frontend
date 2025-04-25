@@ -20,22 +20,32 @@ function BuyerRegisterForm() {
   });
 
   const [message, setMessage] = useState("");
-
   const [isChecking, setIsChecking] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
+  const alphanumericRegex = /[^a-zA-Z0-9]/g;
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+    let sanitizedValue = value;
+
+    if (
+      name === "userId" ||
+      name === "password" ||
+      name === "confirmPassword"
+    ) {
+      sanitizedValue = sanitizedValue.replace(alphanumericRegex, "");
+    }
 
     const numericFields = ["phoneNumber", "dong", "ho", "householdCount"];
+    if (numericFields.includes(name)) {
+      sanitizedValue = sanitizedValue.replace(/[^0-9]/g, "");
+    }
 
     if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: e.target.checked }));
-    } else if (numericFields.includes(name)) {
-      const numericValue = value.replace(/[^0-9]/g, "");
-      setFormData((prev) => ({ ...prev, [name]: numericValue }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
     }
   };
 
@@ -72,7 +82,6 @@ function BuyerRegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     if (!formData.personalInfoAgreement) {
@@ -136,7 +145,7 @@ function BuyerRegisterForm() {
 
     const idRegex = /^[a-zA-Z0-9]{8,}$/;
     if (!idRegex.test(userId)) {
-      alert("아이디는 영문 8자리 이상이어야 합니다.");
+      alert("아이디는 영문+숫자 조합의 8자리 이상이어야 합니다.");
       return false;
     }
 
@@ -244,7 +253,6 @@ function BuyerRegisterForm() {
           onChange={handleChange}
           required
         />
-
         <input
           type="text"
           name="ho"
