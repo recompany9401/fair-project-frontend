@@ -23,12 +23,14 @@ function BusinessRegisterForm() {
   const [isChecking, setIsChecking] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
+  // 아이디/비밀번호에서 영문+숫자 이외 제거
   const alphanumericRegex = /[^a-zA-Z0-9]/g;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     let sanitizedValue = value;
 
+    // 아이디/비번/비번확인 = 영문+숫자만
     if (
       name === "userId" ||
       name === "password" ||
@@ -37,6 +39,7 @@ function BusinessRegisterForm() {
       sanitizedValue = sanitizedValue.replace(alphanumericRegex, "");
     }
 
+    // 사업자번호, 연락처는 숫자만
     if (name === "businessNumber" || name === "phoneNumber") {
       sanitizedValue = sanitizedValue.replace(/[^0-9]/g, "");
     }
@@ -48,15 +51,18 @@ function BusinessRegisterForm() {
   };
 
   const handleCheckUserId = async () => {
-    if (!formData.userId) {
-      alert("아이디를 입력하세요.");
+    const { userId } = formData;
+
+    const idRegex = /^[a-zA-Z0-9]{8,}$/;
+    if (!idRegex.test(userId)) {
+      alert("아이디는 영문+숫자 조합의 8자리 이상이어야 합니다.");
       return;
     }
 
     try {
       setIsChecking(true);
       const response = await fetch(
-        `https://fair-project-backend-production.up.railway.app/api/auth/check-userid?userId=${formData.userId}`
+        `https://fair-project-backend-production.up.railway.app/api/auth/check-userid?userId=${userId}`
       );
       const data = await response.json();
 
@@ -80,13 +86,12 @@ function BusinessRegisterForm() {
       formData;
 
     const idRegex = /^[a-zA-Z0-9]{8,}$/;
-    const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
-
     if (!idRegex.test(userId)) {
-      alert("아이디는 영문+숫자 8자리 이상이어야 합니다.");
+      alert("아이디는 영문+숫자 조합의 8자리 이상이어야 합니다.");
       return false;
     }
 
+    const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
     if (!pwRegex.test(password)) {
       alert("비밀번호는 영문+숫자 조합의 8자리 이상이어야 합니다.");
       return false;
@@ -178,6 +183,7 @@ function BusinessRegisterForm() {
             type="button"
             onClick={handleCheckUserId}
             className="id-check"
+            disabled={isChecking}
           >
             아이디 중복 확인
           </button>
