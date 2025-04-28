@@ -23,14 +23,12 @@ function BusinessRegisterForm() {
   const [isChecking, setIsChecking] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
-  // 아이디/비밀번호에서 영문+숫자 이외 제거
   const alphanumericRegex = /[^a-zA-Z0-9]/g;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     let sanitizedValue = value;
 
-    // 아이디/비번/비번확인 = 영문+숫자만
     if (
       name === "userId" ||
       name === "password" ||
@@ -39,7 +37,6 @@ function BusinessRegisterForm() {
       sanitizedValue = sanitizedValue.replace(alphanumericRegex, "");
     }
 
-    // 사업자번호, 연락처는 숫자만
     if (name === "businessNumber" || name === "phoneNumber") {
       sanitizedValue = sanitizedValue.replace(/[^0-9]/g, "");
     }
