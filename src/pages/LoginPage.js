@@ -23,6 +23,10 @@ function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+
         if (data.role === "BUYER") {
           localStorage.setItem("buyerId", data.userId);
           navigate("/buyer-home");

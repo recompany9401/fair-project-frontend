@@ -1,15 +1,12 @@
-body {
-  background-color: #8f1f22 !important;
-}
-
 .buyer-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-x: scroll;
   -ms-overflow-style: none;
-  height: 100vh;
+  height: 100%;
   background-color: #fff;
+  margin-bottom: 15vw;
 }
 
 .buyer-page::-webkit-scrollbar {
@@ -64,17 +61,22 @@ body {
 .buyer-page form {
   width: 90vw;
   background-color: #fff;
-  margin-top: 8vw;
+  margin: 8vw 0;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 0 10px;
 }
 
-.buyer-page form div {
+.buyer-page form > div {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #ececec;
-  padding: 3px;
+  padding: 7px 3px;
+  width: 100%;
+}
+
+.boder-none {
+  border-bottom: none !important;
 }
 
 .buyer-page form label {
@@ -102,7 +104,8 @@ body {
   resize: none;
 }
 
-.buyer-page form button[type="submit"] {
+.buyer-page form button[type="submit"],
+.buyer-page form button[type="button"] {
   position: absolute;
   background-color: #8f1f22;
   color: #fff;
@@ -113,9 +116,38 @@ body {
   cursor: pointer;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 7vw;
+  margin: 7vw 0;
 }
 
 .buyer-page form button[type="submit"]:hover {
   background-color: #6c1313;
+}
+
+.price-select {
+  width: 70%;
+  position: relative;
+}
+
+.select-btn {
+  position: absolute;
+  padding: 6px 8px;
+  font-size: 10px;
+  right: 0;
+  top: 0.25rem;
+}
+
+.price-select select,
+.price-select input {
+  width: 100% !important;
+}
+
+/* buyer-info css */
+.buyer-info form label {
+  width: 50%;
+}
+
+.buyer-info form input[type="date"],
+.buyer-page form select {
+  width: 100%;
+  padding: 4px;
 }

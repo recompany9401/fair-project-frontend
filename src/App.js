@@ -19,6 +19,7 @@ import AdminApprovePage from "./pages/AdminApprovePage";
 import AdminApproveDetailPage from "./pages/AdminApproveDetailPage";
 import PurchaseDetailPage from "./pages/PurchaseDetailPage";
 import BusinessEditPage from "./pages/BusinessEditPage";
+import BuyerInfoPage from "./pages/BuyerInfoPage";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           element={<BusinessEditPage />}
         />
         <Route path="/buyer-home" element={<BuyerHomePage />} />
+        <Route path="/buyer-info" element={<BuyerInfoPage />} />
         <Route path="/buyer-purchase-list" element={<BuyerPurchaseList />} />
         <Route
           path="/buyer/purchase-detail/:purchaseId"

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../styles/AdminDetailPage.css";
 
 function BuyerDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [buyer, setBuyer] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     fetchBuyerDetail();
@@ -22,44 +28,80 @@ function BuyerDetailPage() {
       }
       const data = await res.json();
       setBuyer(data);
+      setLoading(false);
     } catch (err) {
       console.error("입주자 상세 조회 오류:", err);
     }
   };
 
+  const handleChange = (field, value) => {
+    setBuyer((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handlePasswordChange = (field, value) => {
+    if (field === "newPassword") setNewPassword(value);
+    if (field === "confirmPassword") setConfirmPassword(value);
+  };
+
+  const handleSave = async () => {
+    try {
+      if (newPassword || confirmPassword) {
+        if (newPassword.length < 8) {
+          alert("비밀번호는 8자리 이상이어야 합니다.");
+          return;
+        }
+        if (newPassword !== confirmPassword) {
+          alert("새 비밀번호와 확인이 일치하지 않습니다.");
+          return;
+        }
+      }
+
+      const updateData = {
+        name: buyer.name,
+        phoneNumber: buyer.phoneNumber,
+        dong: buyer.dong,
+        ho: buyer.ho,
+        birthDate: buyer.birthDate || null,
+        gender: buyer.gender,
+        householdCount: buyer.householdCount || 0,
+      };
+
+      if (newPassword) {
+        updateData.password = newPassword;
+      }
+
+      const res = await fetch(
+        `https://fair-project-backend-production.up.railway.app/api/admin/buyers/${id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updateData),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        alert("수정 실패: " + data.message);
+        return;
+      }
+
+      alert("수정 완료");
+      setNewPassword("");
+      setConfirmPassword("");
+      fetchBuyerDetail();
+    } catch (err) {
+      console.error("수정 오류:", err);
+      alert("서버 오류");
+    }
+  };
+
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
-    const dateObj = new Date(dateStr);
-    if (isNaN(dateObj.getTime())) return "";
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-    const day = String(dateObj.getDate()).padStart(2, "0");
-    return `${year}.${month}.${day}`;
+    return dateStr.substring(0, 10);
   };
 
-  const formatGender = (g) => {
-    if (g === "M") return "남성";
-    if (g === "F") return "여성";
-    return "기타";
-  };
-
-  if (!buyer) {
+  if (loading || !buyer) {
     return <div>로딩중...</div>;
   }
-
-  const dongHoStr =
-    buyer.dong && buyer.ho ? `${buyer.dong}동 ${buyer.ho}호` : "";
-
-  const displayFields = [
-    { label: "아이디", value: buyer.userId },
-    { label: "이름", value: buyer.name },
-    { label: "전화번호", value: buyer.phoneNumber },
-    { label: "동/호수", value: dongHoStr },
-    { label: "생년월일", value: formatDate(buyer.birthDate) },
-    { label: "성별", value: formatGender(buyer.gender) },
-    { label: "세대원수", value: buyer.householdCount },
-    { label: "가입일자", value: formatDate(buyer.createdAt) },
-  ];
 
   return (
     <div className="admin-detail">
@@ -70,13 +112,108 @@ function BuyerDetailPage() {
 
       <div className="detail-card">
         <ul>
-          {displayFields.map((field, idx) => (
-            <li key={idx}>
-              <strong>{field.label}</strong> {field.value || ""}
-            </li>
-          ))}
+          <li>
+            <strong>아이디</strong>
+            <input type="text" value={buyer.userId} readOnly></input>
+          </li>
+          <li>
+            <strong>계약자명</strong>
+            <input
+              type="text"
+              value={buyer.name || ""}
+              onChange={(e) => handleChange("name", e.target.value)}
+            />
+          </li>
+          <li>
+            <strong>전화번호</strong>
+            <input
+              type="text"
+              value={buyer.phoneNumber || ""}
+              onChange={(e) =>
+                handleChange(
+                  "phoneNumber",
+                  e.target.value.replace(/[^0-9]/g, "")
+                )
+              }
+            />
+          </li>
+          <li>
+            <strong>동</strong>
+            <input
+              type="text"
+              value={buyer.dong || ""}
+              onChange={(e) =>
+                handleChange("dong", e.target.value.replace(/[^0-9]/g, ""))
+              }
+            />
+          </li>
+          <li>
+            <strong>호</strong>
+            <input
+              type="text"
+              value={buyer.ho || ""}
+              onChange={(e) =>
+                handleChange("ho", e.target.value.replace(/[^0-9]/g, ""))
+              }
+            />
+          </li>
+          <li>
+            <strong>생년월일</strong>
+            <input
+              type="date"
+              value={formatDate(buyer.birthDate)}
+              onChange={(e) => handleChange("birthDate", e.target.value)}
+            />
+          </li>
+          <li>
+            <strong>성별</strong>
+            <select
+              value={buyer.gender || "M"}
+              onChange={(e) => handleChange("gender", e.target.value)}
+            >
+              <option value="M">남성</option>
+              <option value="F">여성</option>
+              <option value="OTHER">기타</option>
+            </select>
+          </li>
+          <li>
+            <strong>세대원수</strong>
+            <input
+              type="text"
+              value={buyer.householdCount || ""}
+              onChange={(e) =>
+                handleChange(
+                  "householdCount",
+                  e.target.value.replace(/[^0-9]/g, "")
+                )
+              }
+            />
+          </li>
+
+          <li>
+            <strong>새 비밀번호</strong>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) =>
+                handlePasswordChange("newPassword", e.target.value)
+              }
+            />
+          </li>
+          <li>
+            <strong>비밀번호 확인</strong>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) =>
+                handlePasswordChange("confirmPassword", e.target.value)
+              }
+            />
+          </li>
         </ul>
       </div>
+
+      <button onClick={handleSave}>저장</button>
     </div>
   );
 }

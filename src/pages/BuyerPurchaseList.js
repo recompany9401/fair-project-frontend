@@ -6,6 +6,7 @@ import {
   faCartShopping,
   faRectangleList,
   faMagnifyingGlass,
+  faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 function BuyerPurchaseList() {
@@ -36,11 +37,10 @@ function BuyerPurchaseList() {
       );
       const data = await res.json();
       if (res.ok) {
-        // 최신 등록된게 상단에 오도록 createdAt 내림차순 정렬
         data.sort((a, b) => {
           const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
           const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          return dateB - dateA; // 내림차순
+          return dateB - dateA;
         });
 
         setPurchaseList(data);
@@ -54,7 +54,6 @@ function BuyerPurchaseList() {
     }
   };
 
-  // 합계 계산 (최종금액, 계약금)
   const calcTotals = (list) => {
     let sumPrice = 0;
     let sumDeposit = 0;
@@ -66,11 +65,9 @@ function BuyerPurchaseList() {
     setTotalDeposit(sumDeposit);
   };
 
-  // 검색
   const handleSearch = (e) => {
     e.preventDefault();
     const term = searchTerm.toLowerCase();
-    // 품명(productName)을 기준으로 필터링
     const filtered = purchaseList.filter((p) =>
       p.productName.toLowerCase().includes(term)
     );
@@ -78,20 +75,24 @@ function BuyerPurchaseList() {
     calcTotals(filtered);
   };
 
-  // 행 클릭 -> 상세 페이지
   const handleRowClick = (purchaseId) => {
     navigate(`/buyer/purchase-detail/${purchaseId}`);
   };
 
-  // "구매 정보 입력" 클릭
   const handleGoHome = () => {
     navigate("/buyer-home");
   };
 
+  const handleGoUser = () => {
+    navigate("/buyer-info");
+  };
+
   return (
     <div className="buyer-purchase">
-      {/* 상단 배너 */}
       <div className="top-banner">
+        <button className="user-btn" onClick={handleGoUser}>
+          <FontAwesomeIcon icon={faCircleUser} />
+        </button>
         <img src="/images/logo-white.png" alt="logo" />
         <div className="purchase-btn">
           <h2 onClick={handleGoHome}>
@@ -105,7 +106,6 @@ function BuyerPurchaseList() {
         </div>
       </div>
 
-      {/* 검색 폼 */}
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
@@ -118,12 +118,10 @@ function BuyerPurchaseList() {
         </button>
       </form>
 
-      {/* total 카운트 */}
       <h3 className="total-count">
         total <span>{filteredList.length}</span>
       </h3>
 
-      {/* 테이블 */}
       <table className="purchase-table">
         <thead>
           <tr>
@@ -153,7 +151,6 @@ function BuyerPurchaseList() {
         </tbody>
       </table>
 
-      {/* 합계 영역 */}
       <div className="totals">
         <p>
           총 금액 <span>{totalPrice.toLocaleString()}원</span>

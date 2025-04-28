@@ -23,23 +23,21 @@ function BuyerRegisterForm() {
   const [isChecking, setIsChecking] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
 
-  const alphanumericRegex = /[^a-zA-Z0-9]/g;
+  const numericRegex = /[^0-9]/g;
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     let sanitizedValue = value;
 
-    if (
-      name === "userId" ||
-      name === "password" ||
-      name === "confirmPassword"
-    ) {
-      sanitizedValue = sanitizedValue.replace(alphanumericRegex, "");
-    }
-
-    const numericFields = ["phoneNumber", "dong", "ho", "householdCount"];
+    const numericFields = [
+      "userId",
+      "phoneNumber",
+      "dong",
+      "ho",
+      "householdCount",
+    ];
     if (numericFields.includes(name)) {
-      sanitizedValue = sanitizedValue.replace(/[^0-9]/g, "");
+      sanitizedValue = sanitizedValue.replace(numericRegex, "");
     }
 
     if (type === "checkbox") {
@@ -52,9 +50,9 @@ function BuyerRegisterForm() {
   const handleCheckUserId = async () => {
     const { userId } = formData;
 
-    const idRegex = /^[a-zA-Z0-9]{8,}$/;
+    const idRegex = /^[0-9]{7}$/;
     if (!idRegex.test(userId)) {
-      alert("아이디는 영문+숫자 조합의 8자리 이상이어야 합니다.");
+      alert("아이디는 숫자 7자리만 가능합니다.");
       return;
     }
 
@@ -143,15 +141,15 @@ function BuyerRegisterForm() {
       householdCount,
     } = formData;
 
-    const idRegex = /^[a-zA-Z0-9]{8,}$/;
+    const idRegex = /^[0-9]{7}$/;
     if (!idRegex.test(userId)) {
-      alert("아이디는 영문+숫자 조합의 8자리 이상이어야 합니다.");
+      alert("아이디는 숫자 7자리만 가능합니다.");
       return false;
     }
 
-    const pwRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
+    const pwRegex = /^.{8,}$/;
     if (!pwRegex.test(password)) {
-      alert("비밀번호는 영문+숫자 조합의 8자리 이상이어야 합니다.");
+      alert("비밀번호는 8자리 이상이어야 합니다.");
       return false;
     }
 
@@ -194,7 +192,7 @@ function BuyerRegisterForm() {
           <input
             type="text"
             name="userId"
-            placeholder="아이디 (영문+숫자, 8자리 이상)"
+            placeholder="아이디 (숫자 동호수 7자리)"
             value={formData.userId}
             onChange={handleChange}
             required
@@ -212,7 +210,7 @@ function BuyerRegisterForm() {
         <input
           type="password"
           name="password"
-          placeholder="비밀번호 (영문+숫자, 8자리 이상)"
+          placeholder="비밀번호 (8자리 이상)"
           value={formData.password}
           onChange={handleChange}
           required

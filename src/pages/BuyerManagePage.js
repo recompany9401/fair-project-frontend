@@ -1,29 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ManagePage.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function BuyerManagePage() {
   const navigate = useNavigate();
+
   const [buyers, setBuyers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchBuyers();
   }, []);
 
-  const fetchBuyers = async () => {
+  const fetchBuyers = async (searchKeyword = "") => {
     try {
-      const res = await fetch(
-        "https://fair-project-backend-production.up.railway.app/api/admin/buyers?approved=true"
-      );
+      let url =
+        "https://fair-project-backend-production.up.railway.app/api/admin/buyers?approved=true";
+      if (searchKeyword) {
+        url += `&search=${encodeURIComponent(searchKeyword)}`;
+      }
+
+      const res = await fetch(url);
       const data = await res.json();
+
       if (res.ok) {
-        setBuyers(data);
+        const sorted = data.sort((a, b) => a.userId.localeCompare(b.userId));
+        setBuyers(sorted);
       } else {
         console.error("입주자 리스트 조회 실패:", data.message);
       }
     } catch (err) {
       console.error("입주자 리스트 요청 오류:", err);
     }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchBuyers(searchTerm);
   };
 
   const handleRowClick = (buyerId) => {
@@ -36,6 +51,19 @@ function BuyerManagePage() {
         <img src="/images/logo-white.png" alt="logo" />
         <h2>입주자 계정 관리</h2>
       </div>
+
+      <form className="search-form" onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="계약자명을 입력해 주세요."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button type="submit">
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </button>
+      </form>
+
       <table>
         <thead>
           <tr>

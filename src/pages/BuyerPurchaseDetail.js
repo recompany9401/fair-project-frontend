@@ -11,6 +11,28 @@ function BuyerPurchaseDetail() {
   const { purchaseId } = useParams();
   const navigate = useNavigate();
 
+  const [depositMode, setDepositMode] = useState("custom");
+  const [middleMode, setMiddleMode] = useState("custom");
+  const [finalMode, setFinalMode] = useState("custom");
+
+  const [depositPercent, setDepositPercent] = useState("");
+  const [middlePercent, setMiddlePercent] = useState("");
+  const [finalPercent, setFinalPercent] = useState("");
+
+  const paymentOptions = [
+    "10",
+    "20",
+    "30",
+    "40",
+    "50",
+    "60",
+    "70",
+    "80",
+    "90",
+    "100",
+    "__CUSTOM__",
+  ];
+
   const [formData, setFormData] = useState({
     itemCategory: "",
     businessName: "",
@@ -20,6 +42,8 @@ function BuyerPurchaseDetail() {
     discountOrSurcharge: 0,
     finalPrice: 0,
     deposit: 0,
+    middlePayment: 0,
+    finalPayment: 0,
     contractDate: "",
     installationDate: "",
     note: "",
@@ -37,14 +61,16 @@ function BuyerPurchaseDetail() {
       const data = await res.json();
       if (res.ok) {
         setFormData({
-          itemCategory: data.itemCategory,
-          businessName: data.businessName,
-          productName: data.productName,
-          option: data.option,
-          price: data.price,
-          discountOrSurcharge: data.discountOrSurcharge,
-          finalPrice: data.finalPrice,
-          deposit: data.deposit,
+          itemCategory: data.itemCategory || "",
+          businessName: data.businessName || "",
+          productName: data.productName || "",
+          option: data.option || "",
+          price: data.price || 0,
+          discountOrSurcharge: data.discountOrSurcharge || 0,
+          finalPrice: data.finalPrice || 0,
+          deposit: data.deposit || 0,
+          middlePayment: data.middlePayment || 0,
+          finalPayment: data.finalPayment || 0,
           contractDate: data.contractDate
             ? data.contractDate.substring(0, 10)
             : "",
@@ -54,7 +80,7 @@ function BuyerPurchaseDetail() {
           note: data.note || "",
         });
       } else {
-        alert("상세조회 실패 " + data.message);
+        alert("상세조회 실패: " + data.message);
       }
     } catch (err) {
       console.error("구매 상세 오류:", err);
@@ -73,7 +99,10 @@ function BuyerPurchaseDetail() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSave = async () => {
@@ -87,6 +116,8 @@ function BuyerPurchaseDetail() {
         discountOrSurcharge: Number(formData.discountOrSurcharge),
         finalPrice: Number(formData.finalPrice),
         deposit: Number(formData.deposit),
+        middlePayment: Number(formData.middlePayment),
+        finalPayment: Number(formData.finalPayment),
         contractDate: formData.contractDate || null,
         installationDate: formData.installationDate || null,
         note: formData.note,
@@ -115,16 +146,11 @@ function BuyerPurchaseDetail() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("정말 삭제하시겠습니까?")) {
-      return;
-    }
-
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
     try {
       const res = await fetch(
         `https://fair-project-backend-production.up.railway.app/api/purchases/${purchaseId}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
       const data = await res.json();
 
@@ -135,7 +161,7 @@ function BuyerPurchaseDetail() {
         alert("삭제 실패: " + data.message);
       }
     } catch (err) {
-      console.error("구매내역 삭제 오류:", err);
+      console.error("삭제 오류:", err);
       alert("서버 오류가 발생했습니다.");
     }
   };
@@ -153,7 +179,7 @@ function BuyerPurchaseDetail() {
             <FontAwesomeIcon icon={faCartShopping} />
             구매 정보 입력
           </h2>
-          <button>
+          <button onClick={() => navigate("/buyer-purchase-list")}>
             <FontAwesomeIcon icon={faRectangleList} />
             구매 리스트
           </button>
@@ -214,15 +240,166 @@ function BuyerPurchaseDetail() {
             readOnly
           />
         </div>
+
         <div>
           <label>계약금</label>
-          <input
-            type="number"
-            name="deposit"
-            value={formData.deposit}
-            onChange={handleChange}
-          />
+          {depositMode === "custom" ? (
+            <>
+              <input
+                type="number"
+                name="deposit"
+                value={formData.deposit}
+                onChange={handleChange}
+              />
+              <button
+                className="select-btn"
+                type="button"
+                onClick={() => {
+                  setDepositMode("select");
+                }}
+              >
+                선택변경
+              </button>
+            </>
+          ) : (
+            <>
+              <select
+                value={depositPercent}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "__CUSTOM__") {
+                    setDepositMode("custom");
+                    setDepositPercent("");
+                  } else {
+                    setDepositMode("select");
+                    setDepositPercent(val);
+                    const finalP = Number(formData.finalPrice) || 0;
+                    const pct = Number(val);
+                    const computed = Math.floor((finalP * pct) / 100);
+                    setFormData((prev) => ({
+                      ...prev,
+                      deposit: computed,
+                    }));
+                  }
+                }}
+              >
+                <option value="">계약금 선택</option>
+                {paymentOptions.map((pct) => (
+                  <option key={pct} value={pct}>
+                    {pct === "__CUSTOM__" ? "직접입력" : `${pct}%`}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
         </div>
+
+        <div>
+          <label>중도금</label>
+          {middleMode === "custom" ? (
+            <>
+              <input
+                type="number"
+                name="middlePayment"
+                value={formData.middlePayment}
+                onChange={handleChange}
+              />
+              <button
+                className="select-btn"
+                type="button"
+                onClick={() => {
+                  setMiddleMode("select");
+                }}
+              >
+                선택변경
+              </button>
+            </>
+          ) : (
+            <>
+              <select
+                value={middlePercent}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "__CUSTOM__") {
+                    setMiddleMode("custom");
+                    setMiddlePercent("");
+                  } else {
+                    setMiddleMode("select");
+                    setMiddlePercent(val);
+                    const finalP = Number(formData.finalPrice) || 0;
+                    const pct = Number(val);
+                    const computed = Math.floor((finalP * pct) / 100);
+                    setFormData((prev) => ({
+                      ...prev,
+                      middlePayment: computed,
+                    }));
+                  }
+                }}
+              >
+                <option value="">중도금 선택</option>
+                {paymentOptions.map((pct) => (
+                  <option key={pct} value={pct}>
+                    {pct === "__CUSTOM__" ? "직접입력" : `${pct}%`}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
+
+        <div>
+          <label>완료금</label>
+          {finalMode === "custom" ? (
+            <>
+              <input
+                type="number"
+                name="finalPayment"
+                value={formData.finalPayment}
+                onChange={handleChange}
+              />
+              <button
+                className="select-btn"
+                type="button"
+                onClick={() => {
+                  setFinalMode("select");
+                }}
+              >
+                선택변경
+              </button>
+            </>
+          ) : (
+            <>
+              <select
+                value={finalPercent}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "__CUSTOM__") {
+                    setFinalMode("custom");
+                    setFinalPercent("");
+                  } else {
+                    setFinalMode("select");
+                    setFinalPercent(val);
+                    const finalP = Number(formData.finalPrice) || 0;
+                    const pct = Number(val);
+                    const computed = Math.floor((finalP * pct) / 100);
+                    setFormData((prev) => ({
+                      ...prev,
+                      finalPayment: computed,
+                    }));
+                  }
+                }}
+              >
+                <option value="">완료금 선택</option>
+                {paymentOptions.map((pct) => (
+                  <option key={pct} value={pct}>
+                    {pct === "__CUSTOM__" ? "직접입력" : `${pct}%`}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+        </div>
+
         <div>
           <label>계약일자</label>
           <input
@@ -252,7 +429,7 @@ function BuyerPurchaseDetail() {
         </div>
       </div>
 
-      <div>
+      <div className="btn-group">
         <button onClick={handleSave} className="save-btn">
           저장
         </button>
