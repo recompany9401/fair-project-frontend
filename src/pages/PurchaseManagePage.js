@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/PurchaseManagePage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faFilter } from "@fortawesome/free-solid-svg-icons";
+import * as XLSX from "xlsx";
 
 function PurchaseManagePage() {
   const navigate = useNavigate();
@@ -78,8 +79,13 @@ function PurchaseManagePage() {
         const dateA = a.contractDate ? new Date(a.contractDate).getTime() : 0;
         const dateB = b.contractDate ? new Date(b.contractDate).getTime() : 0;
         if (dateA === dateB) return 0;
-        if (dateA < dateB) return sortOrder === "asc" ? -1 : 1;
-        return sortOrder === "asc" ? 1 : -1;
+        return dateA < dateB
+          ? sortOrder === "asc"
+            ? -1
+            : 1
+          : sortOrder === "asc"
+          ? 1
+          : -1;
       } else {
         let valA = a[sortField] || "";
         let valB = b[sortField] || "";
@@ -101,16 +107,43 @@ function PurchaseManagePage() {
 
   const sortedPurchases = getSortedPurchases();
 
-  const renderSortArrow = (field) => {
-    if (sortField !== field) return null;
-    return sortOrder === "asc" ? "▲" : "▼";
-  };
-
   const renderIconOrArrow = (field) => {
     if (sortField === field) {
       return <span>{sortOrder === "asc" ? "▲" : "▼"}</span>;
     }
     return <FontAwesomeIcon icon={faFilter} />;
+  };
+
+  const handleDownloadExcel = () => {
+    try {
+      const excelData = sortedPurchases.map((item, idx) => {
+        return {
+          No: idx + 1,
+          구매자명: item.buyerName,
+          동호수: item.dongHo,
+          회사명: item.businessName,
+          품목: item.itemCategory,
+          상품명: item.productName,
+          옵션: item.option,
+          판매금액: item.finalPrice,
+          계약금: item.deposit,
+          계약일자: item.contractDate
+            ? new Date(item.contractDate).toLocaleDateString()
+            : "",
+          상태: translateStatus(item.status),
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(excelData, {
+        skipHeader: false,
+      });
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "PurchaseList");
+
+      XLSX.writeFile(workbook, "구매내역.xlsx");
+    } catch (err) {
+      console.error("Excel 다운로드 오류:", err);
+    }
   };
 
   return (
@@ -148,21 +181,24 @@ function PurchaseManagePage() {
         </button>
       </form>
 
+      <div className="excel">
+        <button onClick={handleDownloadExcel} className="excel-btn">
+          Excel 다운로드
+        </button>
+      </div>
+
       <table>
         <thead>
           <tr>
             <th>No</th>
             <th onClick={() => handleSort("buyerName")}>
-              구매자명
-              {renderIconOrArrow("buyerName")}
+              구매자명 {renderIconOrArrow("buyerName")}
             </th>
             <th onClick={() => handleSort("dongHo")}>
-              동/호수
-              {renderIconOrArrow("dongHo")}
+              동/호수 {renderIconOrArrow("dongHo")}
             </th>
             <th onClick={() => handleSort("businessName")}>
-              회사명
-              {renderIconOrArrow("businessName")}
+              회사명 {renderIconOrArrow("businessName")}
             </th>
             <th>품목</th>
             <th>상품명</th>
@@ -170,13 +206,11 @@ function PurchaseManagePage() {
             <th>판매금액</th>
             <th>계약금</th>
             <th onClick={() => handleSort("contractDate")}>
-              계약일자
-              {renderIconOrArrow("contractDate")}
+              계약일자 {renderIconOrArrow("contractDate")}
             </th>
             <th>상태</th>
           </tr>
         </thead>
-
         <tbody>
           {sortedPurchases.map((p, idx) => (
             <tr key={p._id} onClick={() => handleRowClick(p._id)}>

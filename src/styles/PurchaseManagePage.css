@@ -28,3 +28,12 @@ select {
   position: absolute;
   right: 10px;
 }
+
+.excel {
+  text-align: right;
+}
+
+.excel-btn {
+  position: relative;
+  right: 5vw;
+}
