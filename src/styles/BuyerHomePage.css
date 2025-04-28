@@ -8,6 +8,8 @@ body {
   align-items: center;
   overflow-x: scroll;
   -ms-overflow-style: none;
+  height: 100vh;
+  background-color: #fff;
 }
 
 .buyer-page::-webkit-scrollbar {

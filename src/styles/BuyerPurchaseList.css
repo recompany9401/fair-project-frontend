@@ -8,7 +8,10 @@ body {
   align-items: center;
   overflow-x: scroll;
   -ms-overflow-style: none;
+  background-color: #fff;
+  height: 100vh;
 }
+
 .buyer-purchase::-webkit-scrollbar {
   display: none;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/BusinessEditPage.css"; // CSS 임포트
+import "../styles/BusinessEditPage.css";
 
 function BusinessEditPage() {
   const navigate = useNavigate();
@@ -8,7 +8,6 @@ function BusinessEditPage() {
   const [products, setProducts] = useState([]);
   const [businessId, setBusinessId] = useState("");
 
-  // 마운트 시 실행
   useEffect(() => {
     const storedBizId = localStorage.getItem("businessId");
     if (!storedBizId) {
@@ -20,7 +19,6 @@ function BusinessEditPage() {
     fetchAllProducts(storedBizId);
   }, [navigate]);
 
-  // 모든 Product 조회
   const fetchAllProducts = async (bizId) => {
     try {
       const res = await fetch(
@@ -37,7 +35,6 @@ function BusinessEditPage() {
     }
   };
 
-  // 인풋 변경
   const handleChange = (index, field, value) => {
     setProducts((prev) => {
       const updated = [...prev];
@@ -46,7 +43,6 @@ function BusinessEditPage() {
     });
   };
 
-  // 전체 수정 사항 저장
   const handleSaveAll = async () => {
     if (!window.confirm("모든 수정 내용을 저장하시겠습니까? (5~10초 소요)"))
       return;
@@ -81,7 +77,6 @@ function BusinessEditPage() {
     }
   };
 
-  // 행 삭제
   const handleDelete = async (id) => {
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
@@ -94,7 +89,7 @@ function BusinessEditPage() {
         alert("삭제 완료");
         setProducts((prev) => prev.filter((x) => x._id !== id));
       } else {
-        alert(data.message); // 구매데이터 존재시 "구매데이터 존재..."
+        alert(data.message);
       }
     } catch (err) {
       console.error("삭제 오류:", err);
@@ -104,13 +99,11 @@ function BusinessEditPage() {
 
   return (
     <div className="business-homepage">
-      {/* 상단 헤더 */}
       <div className="business-header">
         <img src="/images/logo-side.png" alt="logo" />
         <h2>품목 수정/삭제</h2>
       </div>
 
-      {/* 테이블 */}
       <table className="edit-table">
         <thead>
           <tr>
@@ -171,7 +164,6 @@ function BusinessEditPage() {
         </tbody>
       </table>
 
-      {/* 하단 저장 버튼 */}
       <div className="save-container">
         <button className="save-button" onClick={handleSaveAll}>
           저장

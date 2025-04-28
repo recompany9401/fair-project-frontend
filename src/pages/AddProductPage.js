@@ -34,14 +34,13 @@ function AddProductPage() {
       businessName: storedBusinessName,
     }));
 
-    fetchAllProducts();
+    fetchMyBusinessProducts(storedBusinessId);
   }, [storedBusinessId, storedBusinessName, navigate]);
 
-  const fetchAllProducts = async () => {
+  const fetchMyBusinessProducts = async (bizId) => {
     try {
-      const res = await fetch(
-        "https://fair-project-backend-production.up.railway.app/api/products/all"
-      );
+      const url = `https://fair-project-backend-production.up.railway.app/api/products?businessId=${bizId}`;
+      const res = await fetch(url);
       const data = await res.json();
 
       if (res.ok) {
